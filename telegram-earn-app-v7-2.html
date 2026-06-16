@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>EarnZone - Scratch & Earn</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Premium White + Purple + Green + Blue */
+  --bg:#F8F6FF;
+  --surface:#FFFFFF;
+  --card:#FFFFFF;
+  --card2:#F3F0FF;
+  --border:#E2D9FF;
+  --border2:#D4F0E8;
+
+  --purple:#7C3AED;
+  --purple2:#9D60F8;
+  --purple3:#C4A7FF;
+  --purple-bg:rgba(124,58,237,0.08);
+  --purple-glow:rgba(124,58,237,0.18);
+
+  --green:#00C873;
+  --green2:#00E88A;
+  --green-bg:rgba(0,200,115,0.09);
+
+  --blue:#1E7FFF;
+  --blue2:#4DA3FF;
+  --blue-bg:rgba(30,127,255,0.09);
+
+  --red:#FF4757;
+  --text:#1A0A3C;
+  --text2:#3B2A6E;
+  --muted:#5B4A8A;
+  --coin:#7C3AED;
+  --coin2:#9D60F8;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;padding-bottom:80px;}
+
+/* Mesh background */
+body::before{content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 10% 0%,rgba(124,58,237,0.10),transparent 55%),
+    radial-gradient(ellipse 50% 40% at 90% 100%,rgba(0,200,115,0.09),transparent 55%),
+    radial-gradient(ellipse 40% 35% at 80% 15%,rgba(30,127,255,0.07),transparent 50%);
+  pointer-events:none;z-index:0;}
+
+/* HEADER */
+.header{position:sticky;top:0;z-index:100;
+  background:rgba(255,255,255,0.88);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-bottom:1.5px solid var(--border);
+  padding:12px 16px;display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 2px 16px rgba(124,58,237,0.07);}
+.header-title{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;
+  background:linear-gradient(120deg,var(--purple),var(--blue));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.5px;}
+.coin-chip{background:linear-gradient(135deg,var(--purple-bg),rgba(124,58,237,0.04));
+  border:1.5px solid var(--purple3);border-radius:22px;padding:6px 14px;
+  display:flex;align-items:center;gap:7px;font-weight:700;font-size:15px;color:var(--purple);
+  box-shadow:0 2px 10px rgba(124,58,237,0.10);}
+.coin-chip-icon{font-size:17px;line-height:1;}
+.coin-usd{font-size:10px;color:#5B4A8A;font-weight:700;}
+
+
+
+/* PAGES */
+.page{display:none;padding:14px;position:relative;z-index:1;}
+.page.active{display:block;}
+.section-title{font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:2px;
+  color:#5B4A8A;text-transform:uppercase;margin-bottom:11px;font-weight:600;}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:16px;}
+.stat-card{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;
+  padding:12px 7px;text-align:center;
+  box-shadow:0 2px 10px rgba(124,58,237,0.06);}
+.stat-val{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--purple);}
+.stat-label{font-size:10px;color:var(--text);margin-top:3px;line-height:1.2;font-weight:700;}
+
+/* LEVEL CARD */
+.level-card{
+  border-radius:18px;padding:0;margin-bottom:14px;overflow:hidden;
+  box-shadow:0 8px 28px rgba(124,58,237,0.18);}
+.lv-header{padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;}
+.lv-left{display:flex;align-items:center;gap:12px;}
+.lv-icon-wrap{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;
+  justify-content:center;font-size:26px;background:rgba(255,255,255,0.15);
+  box-shadow:0 2px 8px rgba(0,0,0,0.12);}
+.lv-name{font-size:15px;font-weight:800;color:#fff;margin-bottom:3px;}
+.lv-badge{display:inline-block;font-size:10px;font-weight:700;border-radius:20px;
+  padding:2px 9px;background:rgba(255,255,255,0.2);color:#fff;border:1px solid rgba(255,255,255,0.3);}
+.lv-earned{font-size:11px;color:rgba(255,255,255,0.80);font-weight:600;margin-top:2px;}
+.lv-right{text-align:center;}
+.lv-wd-box{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);
+  border-radius:12px;padding:8px 12px;min-width:62px;}
+.lv-wd-num{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:800;color:#fff;line-height:1;}
+.lv-wd-label{font-size:9px;color:rgba(255,255,255,0.80);font-weight:700;text-transform:uppercase;letter-spacing:.5px;line-height:1.4;}
+.lv-bar-section{padding:0 16px 12px;}
+.lv-bar-top{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,0.75);font-weight:700;margin-bottom:5px;}
+.lv-bar-wrap{background:rgba(255,255,255,0.2);border-radius:8px;height:8px;overflow:hidden;}
+.lv-bar{height:100%;border-radius:8px;background:rgba(255,255,255,0.9);transition:width 0.7s ease;min-width:5px;}
+.lv-footer{background:rgba(0,0,0,0.12);padding:9px 16px;display:flex;justify-content:space-between;align-items:center;}
+.lv-footer-left{font-size:11px;color:rgba(255,255,255,0.85);font-weight:600;}
+.lv-footer-right{font-size:11px;color:#fff;font-weight:800;}
+.lv-levels-row{display:flex;gap:6px;padding:0 16px 13px;}
+.lv-step{flex:1;border-radius:8px;padding:6px 4px;text-align:center;background:rgba(255,255,255,0.10);
+  border:1px solid rgba(255,255,255,0.15);}
+.lv-step.active{background:rgba(255,255,255,0.22);border-color:rgba(255,255,255,0.5);}
+.lv-step-icon{font-size:14px;}
+.lv-step-name{font-size:9px;color:rgba(255,255,255,0.80);font-weight:700;margin-top:2px;}
+.lv-step-limit{font-size:10px;color:#fff;font-weight:800;}
+
+/* SECTION TITLE ICONS */
+.section-title{display:flex;align-items:center;gap:7px;}
+.st-icon{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.st-scratch{background:var(--purple-bg);
+  box-shadow:0 0 8px rgba(124,58,237,0.25),0 0 16px rgba(124,58,237,0.10);}
+.st-scratch svg{filter:drop-shadow(0 0 4px rgba(124,58,237,0.75));}
+
+/* BALANCE CARD */
+.balance-card{background:linear-gradient(135deg,var(--purple),var(--blue));
+  border-radius:18px;padding:16px 18px;margin-bottom:14px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 6px 24px rgba(124,58,237,0.30);}
+.balance-card-left .bc-label{font-size:11px;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:.8px;text-transform:uppercase;}
+.balance-card-left .bc-coins{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;color:#fff;margin:2px 0;display:flex;align-items:center;gap:8px;}
+.balance-card-left .bc-usd{font-size:12px;color:rgba(255,255,255,0.85);font-weight:700;}
+.balance-card-right{font-size:44px;opacity:0.30;}
+
+/* SCRATCH */
+.scratch-area{background:var(--surface);border:1.5px solid var(--border);border-radius:18px;
+  padding:16px 14px;margin-bottom:13px;text-align:center;
+  box-shadow:0 4px 20px rgba(124,58,237,0.08);}
+#scratchWrap{position:relative;width:100%;height:158px;margin:0 auto 13px;border-radius:13px;overflow:hidden;
+  cursor:crosshair;box-shadow:0 0 0 2px var(--purple3),0 6px 28px rgba(124,58,237,0.16);}
+.scratch-reward{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#F3F0FF,#EAF4FF);border-radius:13px;}
+.reward-amount{font-family:'Space Grotesk',sans-serif;font-size:36px;font-weight:700;
+  background:linear-gradient(120deg,var(--purple),var(--blue));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.reward-unit{font-size:12px;color:var(--text);font-weight:700;margin-top:3px;display:flex;align-items:center;gap:4px;}
+.reward-unit span{color:var(--purple);font-size:13px;}
+.reward-emoji{font-size:28px;margin-bottom:5px;}
+#scratchCanvas{position:absolute;inset:0;border-radius:13px;touch-action:none;display:block;}
+.scratch-info{font-size:12px;color:var(--text);margin-bottom:11px;font-weight:700;}
+.scratch-info b{color:var(--blue);}
+
+
+
+/* BUTTONS */
+.btn{width:100%;padding:13px;border:none;border-radius:12px;
+  font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.6px;cursor:pointer;transition:all 0.2s;margin-bottom:9px;}
+.btn:active{transform:scale(0.97);}
+.btn:disabled{background:#E2D9FF!important;color:var(--muted)!important;box-shadow:none!important;cursor:not-allowed;transform:none!important;}
+.btn-gold{background:linear-gradient(135deg,var(--purple),var(--purple2));color:#fff;
+  box-shadow:0 4px 18px rgba(124,58,237,0.30);}
+.btn-cyan{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;
+  box-shadow:0 4px 18px rgba(30,127,255,0.25);}
+.btn-green{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;
+  box-shadow:0 4px 18px rgba(0,200,115,0.28);}
+
+.cooldown-wrap{background:var(--border);border-radius:5px;height:5px;margin-top:7px;}
+.cooldown-bar{height:100%;border-radius:5px;
+  background:linear-gradient(90deg,var(--purple),var(--blue));transition:width 1s linear;}
+.cooldown-txt{font-size:11px;color:var(--text);margin-top:5px;text-align:center;font-weight:700;}
+
+/* OFFERWALL CARDS */
+.ow-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.ow-card{background:#fff;border:1.5px solid var(--border);border-radius:18px;
+  padding:18px 10px 14px;display:flex;flex-direction:column;align-items:center;
+  gap:10px;cursor:pointer;transition:all 0.18s;
+  box-shadow:0 2px 12px rgba(124,58,237,0.07);position:relative;overflow:hidden;}
+.ow-card:active{transform:scale(0.95);}
+.ow-card:hover{box-shadow:0 6px 22px rgba(124,58,237,0.16);border-color:var(--purple3);}
+.ow-logo-wrap{width:100%;height:72px;display:flex;align-items:center;justify-content:center;}
+.ow-logo-wrap img{max-width:100%;max-height:68px;object-fit:contain;}
+.ow-logo-text{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--text);text-align:center;}
+.ow-badge-new{position:absolute;top:8px;right:8px;background:var(--green);color:#fff;
+  font-size:9px;font-weight:800;border-radius:20px;padding:2px 7px;letter-spacing:.5px;}
+/* FEATURED OFFERWALL CARDS */
+.featured-ow-section{margin-bottom:18px;}
+.featured-ow-label{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.featured-ow-label::before{content:'';display:inline-block;width:16px;height:3px;background:linear-gradient(90deg,var(--purple),var(--blue));border-radius:2px;}
+
+.feat-ow-card{
+  background:#fff;
+  border:2px solid var(--purple3);
+  border-radius:20px;
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  cursor:pointer;
+  transition:all 0.18s;
+  margin-bottom:10px;
+  box-shadow:0 4px 18px rgba(124,58,237,0.13);
+  position:relative;
+  overflow:hidden;
+}
+.feat-ow-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--purple),var(--blue));
+  border-radius:20px 20px 0 0;
+}
+.feat-ow-card:active{transform:scale(0.97);}
+.feat-ow-card:hover{box-shadow:0 8px 28px rgba(124,58,237,0.22);border-color:var(--purple2);}
+
+.feat-ow-logo{width:80px;height:52px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:#f8f6ff;border-radius:12px;border:1.5px solid var(--border);overflow:hidden;}
+.feat-ow-logo img{max-width:76px;max-height:48px;object-fit:contain;}
+
+.feat-ow-info{flex:1;min-width:0;}
+.feat-ow-name{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:800;color:var(--text);margin-bottom:2px;}
+.feat-ow-desc{font-size:11px;color:var(--muted);font-weight:600;margin-bottom:5px;}
+.feat-ow-tags{display:flex;flex-wrap:wrap;gap:4px;}
+.feat-ow-tag{font-size:9px;font-weight:800;padding:2px 7px;border-radius:20px;letter-spacing:.3px;}
+.feat-ow-tag.purple{background:var(--purple-bg);color:var(--purple);border:1px solid rgba(124,58,237,0.2);}
+.feat-ow-tag.green{background:var(--green-bg);color:var(--green);border:1px solid rgba(0,200,115,0.25);}
+.feat-ow-tag.blue{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(30,127,255,0.2);}
+
+.feat-ow-arrow{font-size:20px;color:var(--purple3);flex-shrink:0;font-weight:800;}
+
+.feat-badge-hot{position:absolute;top:10px;right:10px;background:linear-gradient(135deg,#FF4757,#FF6B81);color:#fff;font-size:8px;font-weight:800;border-radius:20px;padding:2px 7px;letter-spacing:.5px;}
+.feat-badge-new{position:absolute;top:10px;right:10px;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;font-size:8px;font-weight:800;border-radius:20px;padding:2px 7px;letter-spacing:.5px;}
+
+.more-ow-label{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;margin-top:6px;display:flex;align-items:center;gap:6px;}
+.more-ow-label::before{content:'';display:inline-block;width:16px;height:2px;background:var(--border);border-radius:2px;}
+
+/* OFFERWALL MODAL / IFRAME OVERLAY */
+.ow-modal{display:none;position:fixed;inset:0;z-index:999;flex-direction:column;background:#f0eeff;}
+.ow-modal.open{display:flex;}
+.ow-modal-header{background:#fff;border-bottom:1.5px solid var(--border);padding:10px 14px;
+  display:flex;align-items:center;gap:10px;box-shadow:0 2px 10px rgba(124,58,237,0.08);flex-shrink:0;}
+.ow-modal-title{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--text);flex:1;}
+.ow-modal-close{background:var(--purple-bg);border:1.5px solid var(--purple3);border-radius:10px;
+  color:var(--purple);font-weight:800;font-size:13px;padding:7px 14px;cursor:pointer;}
+.ow-modal iframe{flex:1;width:100%;border:none;}
+
+/* TOAST */
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-12px);
+  background:#fff;border:1.5px solid var(--border);border-radius:14px;
+  padding:10px 20px;font-weight:700;font-size:13px;opacity:0;
+  transition:all 0.25s;z-index:9999;white-space:nowrap;pointer-events:none;max-width:90vw;
+  box-shadow:0 6px 24px rgba(124,58,237,0.12);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.success{border-color:var(--green);color:var(--green);}
+.toast.error{border-color:var(--red);color:var(--red);}
+.toast.info{border-color:var(--blue);color:var(--blue);}
+.toast.gold{border-color:var(--purple);color:var(--purple);}
+
+/* HISTORY */
+.history-item{display:flex;align-items:center;justify-content:space-between;
+  padding:11px 12px;background:var(--surface);border:1.5px solid var(--border);
+  border-radius:12px;margin-bottom:8px;box-shadow:0 2px 8px rgba(124,58,237,0.05);}
+.history-left{display:flex;align-items:center;gap:9px;}
+.h-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.h-type{font-size:13px;font-weight:700;color:var(--text);}
+.h-time{font-size:10px;color:#5B4A8A;font-weight:700;}
+.h-amount{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;}
+
+/* WITHDRAW */
+.wd-card{background:var(--surface);border:1.5px solid var(--border);border-radius:18px;
+  padding:16px 14px;margin-bottom:13px;box-shadow:0 4px 20px rgba(124,58,237,0.08);}
+.wd-balance{text-align:center;margin-bottom:16px;}
+.wd-bal-coins{font-family:'Space Grotesk',sans-serif;font-size:34px;font-weight:700;
+  color:var(--purple);margin:4px 0;display:flex;align-items:center;justify-content:center;gap:8px;}
+.wd-bal-usd{font-size:13px;color:var(--text);font-weight:700;}
+.wd-rate{display:inline-block;background:var(--purple-bg);
+  border:1.5px solid rgba(124,58,237,0.2);border-radius:10px;
+  padding:5px 14px;font-size:11px;color:var(--purple);margin-bottom:14px;font-weight:700;}
+.input-group{margin-bottom:12px;}
+.input-label{font-size:11px;color:var(--text);margin-bottom:5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;}
+.input-field{width:100%;padding:12px 13px;background:#FAF8FF;
+  border:1.5px solid var(--border);border-radius:11px;
+  color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;
+  outline:none;transition:border-color 0.2s;}
+.input-field:focus{border-color:var(--purple);box-shadow:0 0 0 3px var(--purple-glow);}
+.wd-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.min-badge{background:rgba(255,71,87,0.08);border:1.5px solid rgba(255,71,87,0.25);
+  border-radius:8px;padding:4px 10px;font-size:11px;color:var(--red);font-weight:700;}
+.max-btn{background:none;border:none;color:var(--blue);font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:13px;font-weight:700;cursor:pointer;}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;
+  background:rgba(255,255,255,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1.5px solid var(--border);display:flex;
+  box-shadow:0 -4px 24px rgba(124,58,237,0.10);}
+.nav-btn{flex:1;padding:8px 4px 6px;background:none;border:none;color:#6B5A9E;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:9.5px;font-weight:700;
+  transition:all 0.25s;letter-spacing:.2px;}
+.nav-icon{width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+  border-radius:9px;transition:all 0.25s;}
+.nav-icon svg{width:20px;height:20px;transition:all 0.25s;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.nav-btn.active{color:var(--purple);}
+.nav-btn.active .nav-icon{background:var(--purple-bg);
+  box-shadow:0 0 10px rgba(124,58,237,0.30),0 0 22px rgba(124,58,237,0.12);}
+.nav-btn.active .nav-icon svg{stroke:var(--purple);
+  filter:drop-shadow(0 0 4px rgba(124,58,237,0.75)) drop-shadow(0 0 9px rgba(124,58,237,0.35));}
+
+/* CONFETTI */
+.cp{position:fixed;width:7px;height:7px;border-radius:2px;pointer-events:none;z-index:9999;animation:cf 1.5s ease-out forwards;}
+@keyframes cf{0%{transform:translateY(0) rotate(0);opacity:1;}100%{transform:translateY(100vh) rotate(720deg);opacity:0;}}
+
+/* TASK SECTION LABEL */
+.task-section-label{font-size:11px;font-weight:800;color:var(--purple);
+  text-transform:uppercase;letter-spacing:1px;margin-bottom:9px;
+  display:flex;align-items:center;gap:6px;}
+.visit-claim-btn{position:relative;overflow:hidden;}
+.visit-timer-ring{display:inline-block;width:18px;height:18px;border-radius:50%;
+  border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;
+  animation:spin 1s linear infinite;vertical-align:middle;margin-right:4px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* TASK CARDS */
+.task-card{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;
+  padding:14px 13px;margin-bottom:11px;display:flex;align-items:center;
+  justify-content:space-between;gap:10px;transition:all 0.3s;
+  box-shadow:0 2px 12px rgba(124,58,237,0.06);}
+.task-card.done{border-color:var(--green);background:var(--green-bg);}
+.task-left{display:flex;align-items:center;gap:12px;flex:1;min-width:0;}
+.task-icon{width:44px;height:44px;border-radius:13px;background:transparent;
+  border:none;display:flex;align-items:center;
+  justify-content:center;font-size:21px;flex-shrink:0;}
+.task-info{min-width:0;}
+.task-name{font-size:13px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:2px;}
+.task-desc{font-size:11px;color:var(--text);margin-bottom:5px;font-weight:700;}
+.task-reward-badge{display:inline-flex;align-items:center;gap:4px;background:#fff;
+  border:1.5px solid rgba(124,58,237,0.3);border-radius:20px;
+  padding:3px 10px;font-size:10px;color:var(--purple);font-weight:700;}
+.task-done-badge{display:inline-block;background:var(--green-bg);
+  border:1.5px solid rgba(0,200,115,0.25);border-radius:20px;
+  padding:2px 10px;font-size:10px;color:var(--green);font-weight:700;}
+.task-actions{display:flex;flex-direction:column;gap:6px;flex-shrink:0;}
+.btn-task-join{display:block;background:linear-gradient(135deg,var(--blue),var(--blue2));
+  color:#fff;font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;
+  padding:7px 13px;border-radius:9px;text-decoration:none;text-align:center;
+  letter-spacing:.4px;white-space:nowrap;box-shadow:0 3px 10px rgba(30,127,255,0.22);}
+.btn-task-claim{background:linear-gradient(135deg,var(--green),var(--green2));
+  color:#fff;font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;
+  padding:7px 13px;border-radius:9px;border:none;cursor:pointer;
+  letter-spacing:.4px;transition:all 0.2s;white-space:nowrap;
+  box-shadow:0 3px 10px rgba(0,200,115,0.25);}
+.btn-task-claim:disabled{background:var(--border);color:var(--muted);
+  cursor:not-allowed;box-shadow:none;}
+.btn-task-claim.claimed{background:var(--green-bg);color:var(--green);
+  cursor:not-allowed;border:1.5px solid var(--green);box-shadow:none;}
+
+.info-box{background:linear-gradient(135deg,#F5F0FF,#EEF6FF);
+  border:1.5px solid var(--border);border-radius:13px;
+  padding:12px 14px;font-size:12px;color:var(--text);line-height:1.6;font-weight:700;}
+.info-box strong{color:var(--text);font-weight:700;}
+
+/* COIN SVG */
+.coin-svg-lg{display:inline-flex;align-items:center;filter:drop-shadow(0 2px 6px rgba(124,58,237,0.5));}
+.coin-svg-sm{display:inline-flex;align-items:center;vertical-align:middle;filter:drop-shadow(0 1px 3px rgba(124,58,237,0.4));}
+
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-title">🎁 Claim Reward</div>
+  <div class="coin-chip">
+    <span class="coin-chip-icon"><span class="coin-svg-lg"><svg width="22" height="22" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block;flex-shrink:0"><defs><radialGradient id="rHDR" cx="38%" cy="32%" r="68%"><stop offset="0%" stop-color="#FFF5B0"/><stop offset="40%" stop-color="#FFD234"/><stop offset="75%" stop-color="#FF8C00"/><stop offset="100%" stop-color="#B84400"/></radialGradient><filter id="gHDR"><feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#8B3A00" flood-opacity="0.55"/></filter></defs><circle cx="22" cy="24" r="18" fill="#7A2800" opacity="0.5"/><circle cx="22" cy="22" r="20" fill="url(#rHDR)" filter="url(#gHDR)"/><circle cx="22" cy="22" r="18.5" fill="none" stroke="rgba(255,245,150,0.5)" stroke-width="1"/><ellipse cx="15" cy="14" rx="7" ry="4" fill="white" opacity="0.22" transform="rotate(-30 15 14)"/><text x="22" y="29" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="13" fill="#5C1A00" letter-spacing="0.5">CR</text></svg></span></span>
+    <div>
+      <span id="coinDisplay">0</span>
+      <div class="coin-usd" id="usdDisplay">≈ $0.00</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SCRATCH PAGE ═══ -->
+<div class="page active" id="page-scratch">
+  <!-- Balance Card -->
+  <div class="balance-card">
+    <div class="balance-card-left">
+      <div class="bc-label">Total Balance</div>
+      <div class="bc-coins"><svg width="38" height="38" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;flex-shrink:0"><defs><radialGradient id="rBCN" cx="38%" cy="32%" r="68%"><stop offset="0%" stop-color="#FFF5B0"/><stop offset="40%" stop-color="#FFD234"/><stop offset="75%" stop-color="#FF8C00"/><stop offset="100%" stop-color="#B84400"/></radialGradient><filter id="gBCN"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#8B3A00" flood-opacity="0.55"/></filter></defs><circle cx="22" cy="24" r="18" fill="#7A2800" opacity="0.5"/><circle cx="22" cy="22" r="20" fill="url(#rBCN)" filter="url(#gBCN)"/><circle cx="22" cy="22" r="18.5" fill="none" stroke="rgba(255,245,150,0.5)" stroke-width="1"/><ellipse cx="15" cy="14" rx="7" ry="4" fill="white" opacity="0.25" transform="rotate(-30 15 14)"/><text x="22" y="29" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="13" fill="#5C1A00" letter-spacing="0.5">CR</text></svg> <span id="balanceCoins">0</span></div>
+      <div class="bc-usd" id="balanceUsd">≈ $0.0000 USD</div>
+    </div>
+    <div class="balance-card-right">🏆</div>
+  </div>
+
+  <p class="section-title"><span class="st-icon st-scratch"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="var(--purple)"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20"/><path d="M6 14h3"/><path d="M13 14h5"/><path d="M19 2l1.5 1.5M21 5h1M19 8l1.5-1.5"/><path d="M5 2L3.5 3.5M3 5H2M5 8L3.5 6.5"/></svg></span>Daily Scratch Cards</p>
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-val" id="scratchCount">0</div><div class="stat-label">Scratched Today</div></div>
+    <div class="stat-card"><div class="stat-val" id="scratchLeft">5</div><div class="stat-label">Cards Left</div></div>
+    <div class="stat-card"><div class="stat-val" id="scratchEarned">0</div><div class="stat-label"><svg width="26" height="26" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block"><defs><radialGradient id="rSCR" cx="38%" cy="32%" r="68%"><stop offset="0%" stop-color="#FFF5B0"/><stop offset="40%" stop-color="#FFD234"/><stop offset="75%" stop-color="#FF8C00"/><stop offset="100%" stop-color="#B84400"/></radialGradient><filter id="gSCR"><feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#8B3A00" flood-opacity="0.55"/></filter></defs><circle cx="22" cy="24" r="18" fill="#7A2800" opacity="0.5"/><circle cx="22" cy="22" r="20" fill="url(#rSCR)" filter="url(#gSCR)"/><circle cx="22" cy="22" r="18.5" fill="none" stroke="rgba(255,245,150,0.5)" stroke-width="1"/><ellipse cx="15" cy="14" rx="7" ry="4" fill="white" opacity="0.22" transform="rotate(-30 15 14)"/><text x="22" y="29" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="13" fill="#5C1A00" letter-spacing="0.5">CR</text></svg> Earned</div></div>
+  </div>
+  <div class="scratch-area">
+    <div id="scratchWrap">
+      <div class="scratch-reward" id="rewardLayer">
+        <div class="reward-emoji" id="rewardEmoji">🎁</div>
+        <div class="reward-amount" id="rewardAmt">????</div>
+        <div class="reward-unit"><span class="coin-svg-sm"><svg width="22" height="22" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block;flex-shrink:0"><defs><radialGradient id="rRSCU" cx="38%" cy="32%" r="68%"><stop offset="0%" stop-color="#FFF5B0"/><stop offset="40%" stop-color="#FFD234"/><stop offset="75%" stop-color="#FF8C00"/><stop offset="100%" stop-color="#B84400"/></radialGradient><filter id="gRSCU"><feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#8B3A00" flood-opacity="0.55"/></filter></defs><circle cx="22" cy="24" r="18" fill="#7A2800" opacity="0.5"/><circle cx="22" cy="22" r="20" fill="url(#rRSCU)" filter="url(#gRSCU)"/><circle cx="22" cy="22" r="18.5" fill="none" stroke="rgba(255,245,150,0.5)" stroke-width="1"/><ellipse cx="15" cy="14" rx="7" ry="4" fill="white" opacity="0.22" transform="rotate(-30 15 14)"/><text x="22" y="29" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="13" fill="#5C1A00" letter-spacing="0.5">CR</text></svg></span> COINS</div>
+      </div>
+      <canvas id="scratchCanvas"></canvas>
+    </div>
+    <div class="scratch-info">Scratch here → <b id="scratchPct">0%</b> revealed → collect reward!</div>
+    <button class="btn btn-gold" id="collectBtn" disabled onclick="collectReward()">🎁 COLLECT COINS</button>
+    <div class="cooldown-wrap" id="cooldownWrap" style="display:none"><div class="cooldown-bar" id="cooldownBar" style="width:100%"></div></div>
+    <div class="cooldown-txt" id="cooldownTxt"></div>
+  </div>
+  <button class="btn btn-cyan" onclick="newScratchCard()">🔄 NEW SCRATCH CARD</button>
+  <div class="info-box">💡 <strong>5 Free Scratch Cards Daily!</strong> Scratch 50% to reveal. 10,000 Coins = $1 USDT.</div>
+</div>
+
+<!-- ═══ TASKS PAGE ═══ -->
+<div class="page" id="page-tasks">
+  <p class="section-title" style="margin-bottom:13px">
+    <span class="st-icon" style="background:rgba(41,182,246,0.12);box-shadow:0 0 8px rgba(41,182,246,0.25)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12" fill="#29B6F6"/><path d="M5.5 11.5L17.5 7L14.5 17.5L11 14L8.5 16.5V13L15.5 8.5L9.5 12.5L5.5 11.5Z" fill="white"/></svg></span>
+    Telegram Tasks
+  </p>
+
+  <div class="stats-row" style="margin-bottom:14px">
+    <div class="stat-card"><div class="stat-val" id="taskEarned">0</div><div class="stat-label"><svg width="22" height="22" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block;flex-shrink:0"><defs><radialGradient id="rTSK" cx="38%" cy="32%" r="68%"><stop offset="0%" stop-color="#FFF5B0"/><stop offset="40%" stop-color="#FFD234"/><stop offset="75%" stop-color="#FF8C00"/><stop offset="100%" stop-color="#B84400"/></radialGradient><filter id="gTSK"><feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#8B3A00" flood-opacity="0.55"/></filter></defs><circle cx="22" cy="24" r="18" fill="#7A2800" opacity="0.5"/><circle cx="22" cy="22" r="20" fill="url(#rTSK)" filter="url(#gTSK)"/><circle cx="22" cy="22" r="18.5" fill="none" stroke="rgba(255,245,150,0.5)" stroke-width="1"/><ellipse cx="15" cy="14" rx="7" ry="4" fill="white" opacity="0.22" transform="rotate(-30 15 14)"/><text x="22" y="29" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="13" fill="#5C1A00" letter-spacing="0.5">CR</text></svg> Earned Today</div></div>
+    <div class="stat-card"><div class="stat-val" id="taskCompleted">0</div><div class="stat-label">✅ Tasks Done</div></div>
+    <div class="stat-card"><div class="stat-val" id="taskAvail">4</div><div class="stat-label">🎯 Available</div></div>
+  </div>
+
+  <div class="task-section-label">📌 Join Channel — Earn Monthly</div>
+
+  <div class="task-card" id="taskCard_0">
+    <div class="task-left">
+      <div class="task-icon" style="background:rgba(41,182,246,0.12);border:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12" fill="#29B6F6"/><path d="M5.5 11.5L17.5 7L14.5 17.5L11 14L8.5 16.5V13L15.5 8.5L9.5 12.5L5.5 11.5Z" fill="white"/></svg></div>
+      <div class="task-info">
+        <div class="task-name">RewardSoftware Channel</div>
+        <div class="task-desc">@Rewardsoftware</div>
+        <div class="task-reward-badge"><svg width="22" height="22" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block;flex-shrink:0"><defs><radialGradient id="rRTJ0" cx="38%" cy="32%" r="68%"><stop offset="0%" stop-color="#FFF5B0"/><stop offset="40%" stop-color="#FFD234"/><stop offset="75%" stop-color="#FF8C00"/><stop offset="100%" stop-color="#B84400"/></radialGradient><filter id="gRTJ0"><feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#8B3A00" flood-opacity="0.55"/></filter></defs><circle cx="22" cy="24" r="18" fill="#7A2800" opacity="0.5"/><circle cx="22" cy="22" r="20" fill="url(#rRTJ0)" filter="url(#gRTJ0)"/><circle cx="22" cy="22" r="18.5" fill="none" stroke="rgba(255,245,150,0.5)" stroke-width="1"/><ellipse cx="15" cy="14" rx="7" ry="4" fill="white" opacity="0.22" transform="rotate(-30 15 14)"/><text x="22" y="29" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="13" fill="#5C1A00" letter-spacing="0.5">CR</text></svg> +1 Coin Daily</div>
+      </div>
+    </div>
+    <div class="task-actions">
+      <a class="btn-task-join" href="https://t.me/Rewardsoftware" target="_blank" onclick="markJoined(0)">JOIN →</a>
+      <button class="btn-task-claim" id="verifyBtn_0" onclick="verifyAndClaim(0)" disabled>VERIFY</button>
+    </div>
+  </div>
+
+  <div class="task-card" id="taskCard_1">
+    <div class="task-left">
+      <div class="task-icon" style="background:rgba(41,182,246,0.12);border:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="12" fill="#29B6F6"/><path d="M5.5 11.5L17.5 7L14.5 17.5L11 14L8.5 16.5V13L15.5 8.5L9.5 12.5L5.5 11.5Z" fill="white"/></svg></div>
+      <div class="task-info">
+        <div class="task-name">Payment Proof Channel</div>
+        <div class="task-desc">@rewardsoftwarepayment</div>
+        <div class="task-reward-badge"><svg width="22" height="22" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block;flex-shrink:0"><defs><radialGradient id="rRTJ1" cx="38%" cy="32%" r="68%"><stop offset="0%" stop-color="#FFF5B0"/><stop offset="40%" stop-color="#FFD234"/><stop offset="75%" stop-color="#FF8C00"/><stop offset="100%" stop-color="#B84400"/></radialGradient><filter id="gRTJ1"><feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#8B3A00" flood-opacity="0.55"/></filter></defs><circle cx="22" cy="24" r="18" fill="#7A2800" opacity="0.5"/><circle cx="22" cy="22" r="20" fill="url(#rRTJ1)" filter="url(#gRTJ1)"/><circle cx="22" cy="22" r="18.5" fill="none" stroke="rgba(255,245,150,0.5)" stroke-width="1"/><ellipse cx="15" cy="14" rx="7" ry="4" fill="white" opacity="0.22" transform="rotate(-30 15 14)"/><text x="22" y="29" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="13" fill="#5C1A00" letter-spacing="0.5">CR</text></svg> +1 Coin Daily</div>
+      </div>
+    </div>
+    <div class="task-actions">
+      <a class="btn-task-join" href="https://t.me/rewardsoftwarepayment" target="_blank" onclick="markJoined(1)">JOIN →</a>
+      <button class="btn-task-claim" id="verifyBtn_1" onclick="verifyAndClaim(1)" disabled>VERIFY</button>
+    </div>
+  </div>
+
+  <div class="info-box" style="margin-top:10px">
+    🔄 <strong>Daily Reset at midnight!</strong><br>
+    Join → Verify → <strong>+1 Coin/Day</strong>
+  </div>
+
+  <!-- ══ BITCOTASKS PTC SECTION ══ -->
+  <div class="task-section-label" style="margin-top:18px">
+    💰 PTC Ads — Watch & Earn
+  </div>
+
+  <!-- Config Notice -->
+  <div id="ptcConfigNotice" class="info-box" style="margin-bottom:11px;border-color:rgba(124,58,237,0.3);background:var(--purple-bg);">
+    ⚙️ <strong>Setup Required:</strong> Add your BitcoTasks API Key in CONFIG section to load PTC ads.
+  </div>
+
+  <!-- PTC Stats Row -->
+  <div class="stats-row" style="margin-bottom:11px">
+    <div class="stat-card">
+      <div class="stat-val" id="ptcAdsAvail">—</div>
+      <div class="stat-label">Ads Available</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" id="ptcWatched">0</div>
+      <div class="stat-label">Watched Today</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" id="ptcEarnedStat">0</div>
+      <div class="stat-label">🪙 Earned</div>
+    </div>
+  </div>
+
+  <!-- Refresh Button -->
+  <button class="btn btn-cyan" id="ptcRefreshBtn" onclick="loadPTCAds()" style="margin-bottom:11px">
+    🔄 Load PTC Ads
+  </button>
+
+  <!-- PTC Ads List -->
+  <div id="ptcAdsList">
+    <div style="text-align:center;padding:22px 16px;color:var(--muted);font-size:13px;font-weight:700;">
+      📺 Tap "Load PTC Ads" to fetch available ads
+    </div>
+  </div>
+
+  <!-- PTC Info -->
+  <div class="info-box" style="margin-top:10px;border-color:rgba(0,200,115,0.3)">
+    💡 <strong>How PTC Works:</strong><br>
+    Tap "View Ad" → Ad opens → Wait timer → Come back & tap "CLAIM" to earn coins!
+  </div>
+</div>
+
+<!-- ═══ WITHDRAW PAGE ═══ -->
+<div class="page" id="page-withdraw">
+  <p class="section-title">Coin → USDT Withdrawal</p>
+
+  <!-- Level Card -->
+  <div class="level-card" id="levelCard">
+    <div style="text-align:center;color:var(--text2);font-size:13px;font-weight:700;">Loading level...</div>
+  </div>
+
+  <div class="wd-card">
+    <div class="wd-balance">
+      <div style="font-size:11px;color:var(--text);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;font-weight:700;">Your Balance</div>
+      <div class="wd-bal-coins"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;flex-shrink:0"><defs><linearGradient id="rWD2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFD234"/><stop offset="45%" stop-color="#FF9000"/><stop offset="100%" stop-color="#B84400"/></linearGradient><radialGradient id="fWD2" cx="33%" cy="28%" r="72%"><stop offset="0%" stop-color="#FFF5B0"/><stop offset="40%" stop-color="#FFBE38"/><stop offset="100%" stop-color="#C85200"/></radialGradient><filter id="gWD2" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="20" cy="22.5" r="18" fill="#6B2000" opacity="0.65"/><circle cx="20" cy="20" r="19" fill="rgba(255,150,0,0.18)" filter="url(#gWD2)"/><circle cx="20" cy="20" r="18" fill="url(#rWD2)"/><circle cx="20" cy="20" r="15" fill="url(#fWD2)"/><circle cx="20" cy="20" r="13" fill="none" stroke="rgba(255,235,100,0.5)" stroke-width="0.8"/><ellipse cx="14" cy="12.5" rx="6.5" ry="3.5" fill="rgba(255,255,255,0.30)" transform="rotate(-32 14 12.5)"/><circle cx="11.5" cy="11" r="2.2" fill="rgba(255,255,255,0.18)"/><circle cx="28" cy="13" r="1" fill="rgba(255,255,200,0.50)"/><text x="20.5" y="26" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="800" font-size="14" fill="rgba(70,15,0,0.35)" letter-spacing="1">CR</text><text x="20" y="25.5" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="800" font-size="14" fill="rgba(80,18,0,0.92)" letter-spacing="1">CR</text></svg><span id="wdCoinDisplay">0</span></div>
+      <div class="wd-bal-usd" id="wdUsdDisplay">≈ $0.0000 USD</div>
+    </div>
+    <div style="text-align:center;margin-bottom:15px">
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px">
+        <svg width="28" height="28" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block;margin-right:6px">
+  <rect width="500" height="500" rx="80" fill="white"/>
+  <rect x="15" y="15" width="470" height="470" rx="70" fill="none" stroke="#0066FF" stroke-width="30"/>
+  <text x="250" y="340" text-anchor="middle" font-family="Arial Black,sans-serif" font-weight="900" font-size="240" fill="#0066FF">FP</text>
+</svg>
+        <span style="font-size:15px;font-weight:800;color:#0066FF;">FaucetPay</span>
+      </div>
+      <span class="wd-rate">💱 10,000 Coins = $1.00 USDT</span>
+    </div>
+    <div class="input-group">
+      <div class="input-label">FaucetPay Email</div>
+      <input class="input-field" id="wdAddress" placeholder="your@email.com" type="email">
+    </div>
+    <div class="input-group">
+      <div class="input-label">Coins to Withdraw</div>
+      <input class="input-field" id="wdCoins" placeholder="Minimum 10 coins..." type="number" step="100" oninput="updateWdCalc()">
+    </div>
+    <div style="background:#F5FCFF;border:1px solid var(--border);border-radius:9px;padding:10px 13px;margin-bottom:11px;font-size:12px;color:var(--text);font-weight:700;">
+      You will receive: <strong id="wdUsdtCalc" style="color:var(--green)">0.000000 USDT</strong>
+    </div>
+    <div class="wd-row">
+      <div class="min-badge">⚠ Min: 10 Coins</div>
+      <button class="max-btn" onclick="setMaxWd()">MAX ↑</button>
+    </div>
+    <button class="btn btn-green" onclick="processWithdraw()"><svg width="20" height="20" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block;margin-right:6px">
+  <rect width="500" height="500" rx="80" fill="white"/>
+  <rect x="15" y="15" width="470" height="470" rx="70" fill="none" stroke="#0066FF" stroke-width="30"/>
+  <text x="250" y="340" text-anchor="middle" font-family="Arial Black,sans-serif" font-weight="900" font-size="240" fill="#0066FF">FP</text>
+</svg> WITHDRAW VIA FAUCETPAY</button>
+  </div>
+  <div class="info-box">🔐 <strong>Note:</strong> In production, proxy your FaucetPay API key through a secure backend function.</div>
+</div>
+
+<!-- ═══ HISTORY PAGE ═══ -->
+<div class="page" id="page-history">
+  <p class="section-title">Activity History</p>
+  <div id="historyList">
+    <div style="text-align:center;padding:36px 20px;color:var(--text)">
+      <div style="font-size:36px;margin-bottom:10px">📊</div>
+      <div style="font-weight:700;">No activity yet.<br>Start with Scratch or Tasks!</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ OFFERS PAGE ═══ -->
+<div class="page" id="page-offers">
+
+  <!-- Header Card -->
+  <div style="background:linear-gradient(135deg,var(--purple),var(--blue));border-radius:18px;padding:16px 18px;margin-bottom:16px;box-shadow:0 6px 24px rgba(124,58,237,0.28);display:flex;align-items:center;justify-content:space-between;">
+    <div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.80);font-weight:700;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:3px;">Earn More</div>
+      <div style="font-size:20px;font-weight:800;color:#fff;margin-bottom:2px;">Offerwalls</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.80);font-weight:700;">Surveys · Tasks · Videos · Offers</div>
+    </div>
+    <div style="font-size:42px;opacity:0.25;">🏪</div>
+  </div>
+
+  <!-- ══ FEATURED OFFERWALLS ══ -->
+  <div class="featured-ow-section">
+    <div class="featured-ow-label">⭐ Featured Offerwalls</div>
+
+    <!-- BitcoTasks FEATURED CARD -->
+    <div class="feat-ow-card" onclick="openOfferwall()">
+      <div class="feat-badge-hot">🔥 HOT</div>
+      <div class="feat-ow-logo">
+        <img src="https://bitcotasks.com/assets/img/logo.png"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+          alt="BitcoTasks">
+        <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;background:linear-gradient(135deg,#FF6B35,#FF9000);border-radius:10px;">
+          <span style="color:#fff;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:900;">₿ BITCOTASKS</span>
+        </div>
+      </div>
+      <div class="feat-ow-info">
+        <div class="feat-ow-name">BitcoTasks</div>
+        <div class="feat-ow-desc">bitcotasks.com · PTC Ads + Tasks</div>
+        <div class="feat-ow-tags">
+          <span class="feat-ow-tag purple">📺 PTC Ads</span>
+          <span class="feat-ow-tag green">✅ Tasks</span>
+          <span class="feat-ow-tag blue">💰 Surveys</span>
+        </div>
+      </div>
+      <div class="feat-ow-arrow">›</div>
+    </div>
+
+    <!-- Timewall FEATURED CARD -->
+    <div class="feat-ow-card" onclick="openOwModal('Timewall','https://www.timewall.io/?pubId=YOUR_TIMEWALL_PUBID')">
+      <div class="feat-badge-new">✨ NEW</div>
+      <div class="feat-ow-logo">
+        <img src="https://www.timewall.io/img/timewall-logo.png"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+          alt="Timewall">
+        <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;gap:3px;flex-direction:row;">
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:#555;">time</span>
+          <span style="background:#2ECC71;color:#fff;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:800;padding:2px 6px;border-radius:5px;">wall</span>
+        </div>
+      </div>
+      <div class="feat-ow-info">
+        <div class="feat-ow-name">Timewall</div>
+        <div class="feat-ow-desc">timewall.io · Offers + Videos</div>
+        <div class="feat-ow-tags">
+          <span class="feat-ow-tag green">🎬 Videos</span>
+          <span class="feat-ow-tag purple">📋 Offers</span>
+          <span class="feat-ow-tag blue">🎮 Games</span>
+        </div>
+      </div>
+      <div class="feat-ow-arrow">›</div>
+    </div>
+  </div>
+
+  <!-- ══ MORE OFFERWALLS GRID ══ -->
+  <div class="more-ow-label">🌐 More Offerwalls</div>
+  <div class="ow-grid">
+
+    <!-- OfferwallMe — Coming Soon -->
+    <div class="ow-card" style="opacity:0.45;pointer-events:none;border-style:dashed;">
+      <div class="ow-logo-wrap"><div style="background:#008CBA;color:#fff;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:800;padding:8px 14px;border-radius:8px;letter-spacing:.5px;">OFFERWALL</div></div>
+      <div class="ow-logo-text" style="color:var(--muted)">🔒 Coming Soon</div>
+    </div>
+
+    <!-- Offerwall Media — Coming Soon -->
+    <div class="ow-card" style="opacity:0.45;pointer-events:none;border-style:dashed;">
+      <div class="ow-logo-wrap"><span style="font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;color:#222;">OfferwallMedia</span></div>
+      <div class="ow-logo-text" style="color:var(--muted)">🔒 Coming Soon</div>
+    </div>
+
+    <!-- Monlix — Coming Soon -->
+    <div class="ow-card" style="opacity:0.45;pointer-events:none;border-style:dashed;">
+      <div class="ow-logo-wrap"><div style="background:linear-gradient(135deg,#00C6FF,#0072FF);color:#fff;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:800;padding:7px 14px;border-radius:8px;letter-spacing:.5px;">MONLIX</div></div>
+      <div class="ow-logo-text" style="color:var(--muted)">🔒 Coming Soon</div>
+    </div>
+
+    <!-- PubScale — Coming Soon -->
+    <div class="ow-card" style="opacity:0.45;pointer-events:none;border-style:dashed;">
+      <div class="ow-logo-wrap"><div style="background:linear-gradient(135deg,#7C3AED,#1E7FFF);color:#fff;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:800;padding:7px 13px;border-radius:8px;letter-spacing:.5px;">PubScale</div></div>
+      <div class="ow-logo-text" style="color:var(--muted)">🔒 Coming Soon</div>
+    </div>
+
+    <!-- Wannads — Coming Soon -->
+    <div class="ow-card" style="opacity:0.45;pointer-events:none;border-style:dashed;">
+      <div class="ow-logo-wrap"><div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:900;color:#FF6600;letter-spacing:1px;">WANNADS</div></div>
+      <div class="ow-logo-text" style="color:var(--muted)">🔒 Coming Soon</div>
+    </div>
+
+    <!-- Torox — Coming Soon -->
+    <div class="ow-card" style="opacity:0.45;pointer-events:none;border-style:dashed;">
+      <div class="ow-logo-wrap"><div style="background:linear-gradient(135deg,#E63946,#C1121F);color:#fff;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:800;padding:7px 14px;border-radius:8px;letter-spacing:.5px;">TOROX</div></div>
+      <div class="ow-logo-text" style="color:var(--muted)">🔒 Coming Soon</div>
+    </div>
+
+    <!-- MMwall — Coming Soon -->
+    <div class="ow-card" style="opacity:0.45;pointer-events:none;border-style:dashed;">
+      <div class="ow-logo-wrap"><div style="background:linear-gradient(135deg,#0F4C81,#1976D2);color:#fff;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:800;padding:7px 14px;border-radius:8px;letter-spacing:.5px;">MMwall</div></div>
+      <div class="ow-logo-text" style="color:var(--muted)">🔒 Coming Soon</div>
+    </div>
+
+    <!-- RevU — Coming Soon -->
+    <div class="ow-card" style="opacity:0.45;pointer-events:none;border-style:dashed;">
+      <div class="ow-logo-wrap"><div style="background:linear-gradient(135deg,#6C3483,#A569BD);color:#fff;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:800;padding:7px 14px;border-radius:8px;letter-spacing:.5px;">RevU</div></div>
+      <div class="ow-logo-text" style="color:var(--muted)">🔒 Coming Soon</div>
+    </div>
+
+    <!-- Coming Soon placeholder -->
+    <div class="ow-card" style="opacity:0.40;pointer-events:none;border-style:dashed;">
+      <div class="ow-logo-wrap" style="font-size:30px;">➕</div>
+      <div class="ow-logo-text" style="color:var(--muted)">Coming Soon</div>
+    </div>
+
+  </div>
+
+  <div class="info-box" style="border-color:rgba(30,127,255,0.3);background:var(--blue-bg)">
+    🔥 <strong>BitcoTasks</strong> → New Tab mein khulega (PTC + Tasks).<br>
+    ✨ <strong>Timewall</strong> → App ke andar iframe mein open hoga.<br>
+    🔒 Baki offerwalls jaldi aa rahe hain!
+  </div>
+
+</div>
+
+<!-- ═══ OFFERWALL MODAL ═══ -->
+<div class="ow-modal" id="owModal">
+  <div class="ow-modal-header">
+    <div class="ow-modal-title" id="owModalTitle">Offerwall</div>
+    <button class="ow-modal-close" onclick="closeOwModal()">✕ Close</button>
+  </div>
+  <iframe id="owModalIframe" src="" allow="autoplay" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation"></iframe>
+</div>
+
+<div class="bottom-nav">
+  <button class="nav-btn active" onclick="switchTab('scratch')" id="nav-scratch">
+    <span class="nav-icon"><svg viewBox="0 0 24 24">
+      <rect x="2" y="5" width="20" height="14" rx="3"/>
+      <path d="M2 10h20"/>
+      <path d="M6 14h3"/>
+      <path d="M13 14h5"/>
+      <path d="M19 2l1.5 1.5M21 5h1M19 8l1.5-1.5"/>
+      <path d="M5 2L3.5 3.5M3 5H2M5 8L3.5 6.5"/>
+    </svg></span>Scratch
+  </button>
+  <button class="nav-btn" onclick="switchTab('tasks')" id="nav-tasks">
+    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 7h6"/><path d="M9 17h6"/></svg></span>Tasks
+  </button>
+  <button class="nav-btn" onclick="switchTab('offers')" id="nav-offers">
+    <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><circle cx="12" cy="10" r="3"/><path d="M17 10h2"/><path d="M5 10h2"/></svg></span>Offers
+  </button>
+  <button class="nav-btn" onclick="switchTab('withdraw')" id="nav-withdraw">
+    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>Withdraw
+  </button>
+  <button class="nav-btn" onclick="switchTab('history')" id="nav-history">
+    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 12h18"/><path d="M3 6h18"/><path d="M3 18h12"/><circle cx="19" cy="18" r="2"/><path d="M19 16v-4"/></svg></span>History
+  </button>
+</div>
+
+<script>
+// ══ CONFIG ══
+const CFG = {
+  FAUCETPAY_API_KEY: 'YOUR_FAUCETPAY_API_KEY',
+
+  // ── BitcoTasks PTC Config ──
+  // Apna BitcoTasks API Key yahan daalo
+  BITCOTASKS_API_KEY: '07b4045d04b01a960c49113c63448a',
+  // Bearer token (agar required ho)
+  BITCOTASKS_BEARER: 'YOUR_BEARER_TOKEN',
+  // Kitne seconds baad CLAIM button enable hoga (ad dekhne ka wait time)
+  PTC_WAIT_SECONDS: 30,
+  // 1 PTC ad = kitne coins (tum apne hisab se set karo)
+  PTC_COINS_PER_AD: 1,
+  // Ek din mein max kitne PTC ads claim kar sakte hain
+  PTC_MAX_PER_DAY: 20,
+
+  COINS_PER_DOLLAR: 10000,       // 10000 coins = $1
+  MIN_WITHDRAW_COINS: 10,        // min 10 coins to withdraw
+  SCRATCH_PER_DAY: 5,
+  SCRATCH_COOLDOWN: 60,          // seconds (set 3600 in production)
+  // Scratch rewards in COINS
+  SCRATCH_REWARDS: [1],
+  SCRATCH_WEIGHTS: [1],
+  // Captcha reward in COINS — flat 1 coin, no streak bonus
+  CAPTCHA_REWARD: 1,
+  CAPTCHA_PER_DAY: 4,
+  // Level System — based on totalEarned coins
+  LEVELS: [
+    { name: 'Beginner',   min: 0,   max: 99,   dailyWithdraw: 10,    color: '#8B7BAE', icon: '🥉' },
+    { name: 'Pro',        min: 100, max: 199,   dailyWithdraw: 20,    color: '#FF9000', icon: '🥈' },
+    { name: 'Elite',      min: 200, max: Infinity, dailyWithdraw: 50, color: '#7C3AED', icon: '🥇' },
+  ],
+};
+
+// ══ IMAGE SETS — 8 categories, 9 emojis each ══
+const IMG = {
+  '🚗 Cars':    ['🚗','🚕','🚙','🏎','🚓','🚐','🚌','🚑','🚒'],
+  '🐶 Animals': ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨'],
+  '🍎 Fruits':  ['🍎','🍊','🍋','🍇','🍓','🍑','🥭','🍒','🍍'],
+  '🍕 Food':    ['🍕','🍔','🍟','🌮','🍜','🍣','🍩','🍦','🧁'],
+  '⚽ Sports':  ['⚽','🏀','🏈','⚾','🎾','🏐','🏉','🎱','🏓'],
+  '✈️ Travel':  ['✈️','🚀','🚢','🚂','🚁','🛸','🛥️','🚤','⛵'],
+  '🌸 Nature':  ['🌸','🌺','🌻','🌹','🌷','🌼','🌿','🍀','🌴'],
+  '💎 Gems':    ['💎','💍','🔮','🪩','✨','⭐','🌟','💫','🔯'],
+};
+
+// ══ STATE ══
+let S = {
+  coins: 0,
+  scratchCount: 0, scratchEarned: 0,
+  captchaCount: 0, captchaStreak: 0, captchaEarned: 0, captchaDate: '',
+  history: [],
+  currentReward: 0,
+  scratchRevealed: false, scratchCollected: false,
+  lastScratchTime: 0,
+  taskJoined: [false, false],
+  taskClaimedDate: ['', ''],
+  visitClaimedDate: ['', ''],
+  visitTimer: [0, 0],
+  totalEarned: 0,
+  taskEarned: 0, taskEarnedDate: '',
+  withdrawnToday: 0,
+  withdrawnDate: '',
+  // PTC state
+  ptcWatched: 0,           // aaj ke watched ads count
+  ptcWatchedDate: '',      // last watched date
+  ptcEarned: 0,            // total ptc coins earned
+  ptcViewedAt: {},         // { adId: timestamp } — kab ad open kiya
+  ptcClaimed: {},          // { adId: dateStr } — kab claim kiya
+  // Offerwall state
+  offerwallOpened: 0,      // total times opened
+  offerwallEarned: 0,      // coins earned via offerwall
+  offerwallToday: 0,       // aaj kitne coins
+  offerwallTodayDate: '',  // date track
+};
+
+let tg = window.Telegram?.WebApp;
+if (tg) { tg.ready(); tg.expand(); }
+
+loadState();
+
+// ══ PERSIST ══
+function saveState() {
+  try { localStorage.setItem('ez3', JSON.stringify(S)); } catch(e){}
+}
+function loadState() {
+  try {
+    const raw = localStorage.getItem('ez3');
+    if (!raw) return;
+    Object.assign(S, JSON.parse(raw));
+    if (new Date(S.lastScratchTime||0).toDateString() !== new Date().toDateString()) S.scratchCount = 0;
+  } catch(e){}
+}
+
+// ══ HELPERS ══
+function fmtCoins(n) { return Math.floor(n||0).toLocaleString(); }
+function coinsToUsd(c) { return (c / CFG.COINS_PER_DOLLAR).toFixed(4); }
+function coinsToUsdt(c) { return (c / CFG.COINS_PER_DOLLAR).toFixed(6); }
+
+// ══ LEVEL SYSTEM ══
+function getLevel() {
+  const earned = S.totalEarned || 0;
+  for (let i = CFG.LEVELS.length - 1; i >= 0; i--) {
+    if (earned >= CFG.LEVELS[i].min) return { ...CFG.LEVELS[i], idx: i, earned };
+  }
+  return { ...CFG.LEVELS[0], idx: 0, earned };
+}
+
+function getDailyWithdrawLimit() {
+  return getLevel().dailyWithdraw;
+}
+
+function getWithdrawnToday() {
+  S.withdrawnDate = S.withdrawnDate || '';
+  S.withdrawnToday = S.withdrawnToday || 0;
+  if (S.withdrawnDate !== todayStr()) { S.withdrawnToday = 0; S.withdrawnDate = todayStr(); }
+  return S.withdrawnToday;
+}
+
+function getRemainingWithdraw() {
+  return Math.max(0, getDailyWithdrawLimit() - getWithdrawnToday());
+}
+
+function updateLevelUI() {
+  const lv = getLevel();
+  const earned = lv.earned;
+  const nextLv = CFG.LEVELS[lv.idx + 1];
+  const pct = nextLv ? Math.min(100, Math.round(((earned - lv.min) / (nextLv.min - lv.min)) * 100)) : 100;
+  const remaining = getRemainingWithdraw();
+
+  // Gradient per level
+  const gradients = [
+    'linear-gradient(135deg,#8B5CF6,#6D28D9)',
+    'linear-gradient(135deg,#F59E0B,#D97706)',
+    'linear-gradient(135deg,#7C3AED,#1E7FFF)',
+  ];
+  const grad = gradients[lv.idx] || gradients[0];
+
+  const el = document.getElementById('levelCard');
+  if (!el) return;
+  el.style.background = grad;
+
+  // Build level steps row
+  const stepsHtml = CFG.LEVELS.map((l,i) => `
+    <div class="lv-step ${i === lv.idx ? 'active' : ''}">
+      <div class="lv-step-icon">${l.icon}</div>
+      <div class="lv-step-name">${l.name}</div>
+      <div class="lv-step-limit">${l.dailyWithdraw}/day</div>
+    </div>`).join('');
+
+  el.innerHTML = `
+    <div class="lv-header">
+      <div class="lv-left">
+        <div class="lv-icon-wrap">${lv.icon}</div>
+        <div>
+          <div class="lv-name">${lv.name} <span class="lv-badge">Level ${lv.idx+1}</span></div>
+          <div class="lv-earned">${fmtCoins(earned)} total coins earned</div>
+        </div>
+      </div>
+      <div class="lv-right">
+        <div class="lv-wd-box">
+          <div class="lv-wd-num">${remaining}</div>
+          <div class="lv-wd-label">coins left<br>today</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lv-bar-section">
+      <div class="lv-bar-top">
+        <span>${fmtCoins(earned - lv.min)} / ${nextLv ? fmtCoins(nextLv.min - lv.min) : '∞'} earned</span>
+        <span>${pct}%${nextLv ? ' to ' + nextLv.icon + ' ' + nextLv.name : ' MAX'}</span>
+      </div>
+      <div class="lv-bar-wrap">
+        <div class="lv-bar" style="width:${pct}%"></div>
+      </div>
+    </div>
+
+    <div class="lv-levels-row">${stepsHtml}</div>
+
+    <div class="lv-footer">
+      <div class="lv-footer-left">📅 Daily withdraw limit</div>
+      <div class="lv-footer-right">💳 ${lv.dailyWithdraw} Coins / Day</div>
+    </div>
+  `;
+}
+
+function updateUI() {
+  { const _el=document.getElementById('coinDisplay'); if(_el) _el.textContent=fmtCoins(S.coins); }
+  { const _el=document.getElementById('usdDisplay'); if(_el) _el.textContent='≈ $' + coinsToUsd(S.coins); }
+  const wdc=document.getElementById('wdCoinDisplay'); if(wdc) wdc.textContent=fmtCoins(S.coins);
+  const wdu=document.getElementById('wdUsdDisplay'); if(wdu) wdu.textContent='≈ $'+coinsToUsd(S.coins)+' USD';
+  const bc=document.getElementById('balanceCoins'); if(bc) bc.textContent=fmtCoins(S.coins);
+  const bu=document.getElementById('balanceUsd'); if(bu) bu.textContent='≈ $'+coinsToUsd(S.coins)+' USD';
+  { const _el=document.getElementById('scratchCount'); if(_el) _el.textContent=S.scratchCount; }
+  { const _el=document.getElementById('scratchLeft'); if(_el) _el.textContent=Math.max(0, CFG.SCRATCH_PER_DAY - S.scratchCount); }
+  { const _el=document.getElementById('scratchEarned'); if(_el) _el.textContent=fmtCoins(S.scratchEarned); }
+  if (S.captchaDate !== todayStr()) S.captchaCount = 0;
+  renderHistory();
+  renderTasks();
+  renderVisitTasks();
+  updateLevelUI();
+  updateTaskStats();
+}
+
+function showToast(msg, type='info') {
+  const t = document.getElementById('toast');
+  t.innerHTML = msg;
+  t.className = 'toast ' + type + ' show';
+  clearTimeout(t._t);
+  t._t = setTimeout(()=> t.classList.remove('show'), 2800);
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const pg=document.getElementById('page-'+tab); if(pg) pg.classList.add('active');
+  const nb=document.getElementById('nav-'+tab); if(nb) nb.classList.add('active');
+  if (tab==='scratch' && !S.scratchCollected) setTimeout(resizeScratch, 60);
+  if (tab==='tasks') { renderTasks(); renderVisitTasks(); }
+  if (tab==='withdraw') setTimeout(updateLevelUI, 60);
+  if (tab==='offers') setTimeout(updateOfferwallUI, 60);
+}
+
+function confetti(x) {
+  const colors=['#FFD700','#00E5FF','#00FF88','#FF4757','#FF6B35','#A855F7','#F7B731'];
+  for (let i=0;i<32;i++){
+    const el=document.createElement('div');
+    el.className='cp';
+    el.style.cssText=`left:${8+Math.random()*84}vw;top:50px;background:${colors[Math.random()*colors.length|0]};animation-delay:${Math.random()*0.5}s;animation-duration:${1.2+Math.random()*0.8}s`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),2400);
+  }
+}
+
+// ══ SCRATCH CARD ══
+// ══ SCRATCH CARD ══
+let sCtx=null, sDrawing=false;
+
+function weightedRandom(vals, weights){
+  const tot=weights.reduce((a,b)=>a+b,0);
+  let r=Math.random()*tot;
+  for(let i=0;i<vals.length;i++){r-=weights[i];if(r<=0)return vals[i];}
+  return vals[0];
+}
+
+function initScratch(){
+  const wrap=document.getElementById('scratchWrap');
+  const cv=document.getElementById('scratchCanvas');
+  if(!wrap||!cv) return;
+  const W=wrap.clientWidth||wrap.offsetWidth||300;
+  const H=wrap.clientHeight||158;
+  cv.width=W; cv.height=H;
+  sCtx=cv.getContext('2d');
+
+  S.currentReward=weightedRandom(CFG.SCRATCH_REWARDS, CFG.SCRATCH_WEIGHTS);
+  S.scratchRevealed=false; S.scratchCollected=false;
+
+  const g=sCtx.createLinearGradient(0,0,W,H);
+  g.addColorStop(0,'#5B21B6'); g.addColorStop(.5,'#7C3AED'); g.addColorStop(1,'#1E7FFF');
+  sCtx.fillStyle=g; sCtx.fillRect(0,0,W,H);
+  sCtx.fillStyle='rgba(255,255,255,0.08)';
+  for(let x=0;x<W;x+=16) for(let y=0;y<H;y+=16) sCtx.fillRect(x,y,8,8);
+  sCtx.font='14px serif';
+  for(let i=0;i<12;i++) sCtx.fillText('🪙',Math.random()*(W-20)+5,Math.random()*(H-10)+14);
+  sCtx.fillStyle='rgba(255,255,255,0.90)';
+  sCtx.font='bold 16px Plus Jakarta Sans,sans-serif';
+  sCtx.textAlign='center';
+  sCtx.fillText('👆 SCRATCH HERE TO WIN', W/2, H/2-6);
+  sCtx.font='12px Plus Jakarta Sans,sans-serif';
+  sCtx.fillStyle='rgba(255,255,255,0.65)';
+  sCtx.fillText('Coins are hidden inside!', W/2, H/2+14);
+
+  document.getElementById('collectBtn').disabled=true;
+  { const _el=document.getElementById('scratchPct'); if(_el) _el.textContent='0%'; }
+  { const _el=document.getElementById('rewardAmt'); if(_el) _el.textContent='????'; }
+  { const _el=document.getElementById('rewardEmoji'); if(_el) _el.textContent='🎁'; }
+
+  cv.onmousedown=e=>{sDrawing=true;e.preventDefault();scratchAt(e);};
+  cv.onmousemove=e=>{if(sDrawing)scratchAt(e);};
+  cv.onmouseup=()=>sDrawing=false;
+  cv.onmouseleave=()=>sDrawing=false;
+  cv.ontouchstart=e=>{sDrawing=true;e.preventDefault();scratchAtT(e);};
+  cv.ontouchmove=e=>{e.preventDefault();if(sDrawing)scratchAtT(e);};
+  cv.ontouchend=()=>sDrawing=false;
+}
+
+function resizeScratch(){
+  if(S.scratchCollected) return;
+  const wrap=document.getElementById('scratchWrap');
+  const cv=document.getElementById('scratchCanvas');
+  if(wrap && cv && wrap.clientWidth && wrap.clientWidth!==cv.width) initScratch();
+}
+
+function scratchAt(e){
+  const cv=document.getElementById('scratchCanvas');
+  if(!cv) return;
+  const r=cv.getBoundingClientRect();
+  doScratch(e.clientX-r.left, e.clientY-r.top);
+}
+function scratchAtT(e){
+  const cv=document.getElementById('scratchCanvas');
+  if(!cv) return;
+  const r=cv.getBoundingClientRect();
+  doScratch(e.touches[0].clientX-r.left, e.touches[0].clientY-r.top);
+}
+function doScratch(x,y){
+  const cv2=document.getElementById('scratchCanvas');
+  if(!sCtx||!cv2||S.scratchCollected) return;
+  sCtx.globalCompositeOperation='destination-out';
+  sCtx.beginPath(); sCtx.arc(x,y,26,0,Math.PI*2); sCtx.fill();
+  checkScratchPct();
+}
+function checkScratchPct(){
+  const cv=document.getElementById('scratchCanvas');
+  if(!cv||!sCtx) return;
+  const W=cv.width,H=cv.height,step=18;
+  const data=sCtx.getImageData(0,0,W,H).data;
+  let tr=0,tot=0;
+  for(let x=0;x<W;x+=step) for(let y=0;y<H;y+=step){tot++;if(data[(y*W+x)*4+3]<100)tr++;}
+  const pct=Math.min(100,Math.round(tr/tot*100));
+  { const _el=document.getElementById('scratchPct'); if(_el) _el.textContent=pct+'%'; }
+  if(pct>=50&&!S.scratchRevealed){
+    S.scratchRevealed=true;
+    { const _el=document.getElementById('rewardAmt'); if(_el) _el.textContent=fmtCoins(S.currentReward); }
+    { const _el=document.getElementById('rewardEmoji'); if(_el) _el.textContent=S.currentReward>=1000?'🤑':S.currentReward>=500?'💰':'🎉'; }
+    document.getElementById('collectBtn').disabled=false;
+    showToast('🎉 Coins revealed! Tap to collect!','gold');
+  }
+}
+
+function newScratchCard(){
+  if(S.scratchCount>=CFG.SCRATCH_PER_DAY){showToast('❌ All cards used today! Come back tomorrow.','error');return;}
+  const elapsed=(Date.now()-S.lastScratchTime)/1000;
+  if(S.lastScratchTime>0&&elapsed<CFG.SCRATCH_COOLDOWN){
+    const left=Math.ceil(CFG.SCRATCH_COOLDOWN-elapsed);
+    showToast('⏳ Next card in '+left+'s!','info');
+    startCooldown(left); return;
+  }
+  setTimeout(initScratch,30);
+  showToast('🃏 New scratch card ready!','info');
+}
+
+function collectReward(){
+  if(S.scratchCollected||!S.scratchRevealed) return;
+  S.scratchCollected=true;
+  S.coins+=S.currentReward; S.scratchEarned+=S.currentReward; S.totalEarned=(S.totalEarned||0)+S.currentReward;
+  S.scratchCount++; S.lastScratchTime=Date.now();
+  addHistory('scratch',S.currentReward,'🃏 Scratch Card');
+  document.getElementById('collectBtn').disabled=true;
+  confetti();
+  showToast('<svg width="16" height="16" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block;margin-right:3px"><defs><linearGradient id="rT" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFD234"/><stop offset="45%" stop-color="#FF9000"/><stop offset="100%" stop-color="#B84400"/></linearGradient><radialGradient id="fT" cx="33%" cy="28%" r="72%"><stop offset="0%" stop-color="#FFF5B0"/><stop offset="40%" stop-color="#FFBE38"/><stop offset="100%" stop-color="#C85200"/></radialGradient></defs><circle cx="20" cy="22.5" r="18" fill="#6B2000" opacity="0.65"/><circle cx="20" cy="20" r="18" fill="url(#rT)"/><circle cx="20" cy="20" r="15" fill="url(#fT)"/><ellipse cx="14" cy="12.5" rx="6.5" ry="3.5" fill="rgba(255,255,255,0.30)" transform="rotate(-32 14 12.5)"/><text x="20" y="25.5" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="800" font-size="14" fill="rgba(80,18,0,0.92)" letter-spacing="1">CR</text></svg>+'+fmtCoins(S.currentReward)+' Coins Earned!','success');
+  saveState(); updateUI();
+  startCooldown(CFG.SCRATCH_COOLDOWN);
+}
+
+let cdT=null;
+function startCooldown(sec){
+  const total=CFG.SCRATCH_COOLDOWN;
+  const wrap=document.getElementById('cooldownWrap');
+  const bar=document.getElementById('cooldownBar');
+  const txt=document.getElementById('cooldownTxt');
+  wrap.style.display='block'; if(cdT)clearInterval(cdT);
+  let left=sec;
+  bar.style.width=(left/total*100)+'%';
+  txt.textContent='⏳ Next card in: '+left+'s';
+  cdT=setInterval(()=>{
+    left--;
+    bar.style.width=Math.max(0,left/total*100)+'%';
+    txt.textContent='⏳ Next card in: '+left+'s';
+    if(left<=0){clearInterval(cdT);wrap.style.display='none';txt.textContent='';showToast('🃏 New scratch card available!','gold');}
+  },1000);
+}
+
+// ══ OFFERWALL MODAL ══
+function openOwModal(title, url) {
+  const tgApp = window.Telegram?.WebApp;
+  const userId = tgApp?.initDataUnsafe?.user?.id || 'guest';
+  // Replace USERID placeholder with real user id
+  const finalUrl = url.replace('USERID', userId);
+  const modal = document.getElementById('owModal');
+  const iframe = document.getElementById('owModalIframe');
+  const titleEl = document.getElementById('owModalTitle');
+  titleEl.textContent = title;
+  iframe.src = finalUrl;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeOwModal() {
+  const modal = document.getElementById('owModal');
+  const iframe = document.getElementById('owModalIframe');
+  modal.classList.remove('open');
+  iframe.src = '';
+  document.body.style.overflow = '';
+}
+
+// ══ CAPTCHA stubs removed — feature hataya gaya ══
+function generateCaptcha(){}
+
+// ══ HISTORY ══
+function addHistory(type, amount, label){
+  S.history.unshift({type,amount,label,time:new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})});
+  if(S.history.length>60) S.history.length=60;
+}
+function renderHistory(){
+  const list=document.getElementById('historyList');
+  if(!S.history.length){
+    list.innerHTML='<div style="text-align:center;padding:36px 20px;color:#3B2A6E"><div style="font-size:36px;margin-bottom:10px">📊</div><div style="font-weight:600;">No activity yet.<br>Start with Scratch or Tasks!</div></div>';
+    return;
+  }
+  list.innerHTML=S.history.map(h=>`
+    <div class="history-item">
+      <div class="history-left">
+        <div class="h-icon" style="background:${h.type==='scratch'?'var(--purple-bg)':h.type==='captcha'?'var(--blue-bg)':h.type==='task'?'var(--green-bg)':'rgba(255,71,87,0.08)'}">
+          ${h.type==='scratch'
+            ?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke:#7C3AED;filter:drop-shadow(0 0 4px rgba(124,58,237,0.75))"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20"/><path d="M7 15h2"/><path d="M12 15h5"/></svg>'
+            :h.type==='captcha'
+            ?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke:#1E7FFF;filter:drop-shadow(0 0 4px rgba(30,127,255,0.75))"><circle cx="12" cy="8" r="4"/><rect x="3" y="15" width="18" height="6" rx="2"/><path d="M7 18h2"/><path d="M12 18h5"/></svg>'
+            :h.type==='task'
+            ?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke:#00C873;filter:drop-shadow(0 0 4px rgba(0,200,115,0.75))"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12l2 2 4-4"/></svg>'
+            :'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke:#FF4757;filter:drop-shadow(0 0 4px rgba(255,71,87,0.75))"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>'
+          }
+        </div>
+        <div>
+          <div class="h-type">${h.label}</div>
+          <div class="h-time">${h.time}</div>
+        </div>
+      </div>
+      <div class="h-amount" style="color:${h.amount<0?'var(--red)':'var(--coin)'}">
+        ${h.amount<0?'-':'+'}${fmtCoins(Math.abs(h.amount))} Coins
+      </div>
+    </div>`).join('');
+}
+
+// ══ WITHDRAW ══
+function updateWdCalc(){
+  const coins=parseInt(document.getElementById('wdCoins').value)||0;
+  { const _el=document.getElementById('wdUsdtCalc'); if(_el) _el.textContent=coinsToUsdt(coins)+' USDT'; }
+}
+function setMaxWd(){
+  document.getElementById('wdCoins').value=Math.floor(S.coins);
+  updateWdCalc();
+}
+async function processWithdraw(){
+  const addr=document.getElementById('wdAddress').value.trim();
+  const coins=parseInt(document.getElementById('wdCoins').value)||0;
+  if(!addr){showToast('❌ Enter your email or address!','error');return;}
+  if(coins<CFG.MIN_WITHDRAW_COINS){showToast('❌ Minimum 10 coins required!','error');return;}
+  if(coins>S.coins){showToast('❌ Not enough coins!','error');return;}
+  const remaining=getRemainingWithdraw();
+  if(coins>remaining){
+    const lv=getLevel();
+    showToast('❌ Daily limit: '+lv.dailyWithdraw+' coins. '+remaining+' left today!','error');
+    return;
+  }
+  const usdt=parseFloat(coinsToUsdt(coins));
+  showToast('⏳ Processing...','info');
+  try {
+    const res=await fetch('https://faucetpay.io/api/v1/send',{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams({api_key:CFG.FAUCETPAY_API_KEY,to:addr,amount:Math.round(usdt*1e8),currency:'USDT',referral:1})
+    });
+    const d=await res.json();
+    if(d.status===200){
+      S.coins-=coins; S.withdrawnToday=(getWithdrawnToday())+coins; S.withdrawnDate=todayStr();
+      addHistory('withdraw',-coins,'💳 Withdrawal → '+usdt+' USDT');
+      saveState();updateUI();confetti();
+      showToast('✅ '+usdt+' USDT sent successfully!','success');
+    } else { showToast('❌ '+(d.message||'Transaction failed!'),'error'); }
+  } catch(e){
+    // Demo fallback
+    S.coins-=coins; S.withdrawnToday=(getWithdrawnToday())+coins; S.withdrawnDate=todayStr();
+    addHistory('withdraw',-coins,'💳 Withdrawal (Demo) → '+usdt+' USDT');
+    saveState();updateUI();confetti();
+    showToast('✅ Demo: '+usdt+' USDT sent!','success');
+  }
+}
+
+// ══ TASKS ══
+const TASK_NAMES = ['RewardSoftware Channel', 'Payment Proof Channel'];
+
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+
+function thisMonthStr(){ return new Date().toISOString().slice(0,7); } // YYYY-MM
+
+function taskClaimedToday(idx){
+  S.taskClaimedDate = S.taskClaimedDate || ['',''];
+  return S.taskClaimedDate[idx] === todayStr();
+}
+
+function renderTasks() {
+  S.taskJoined  = S.taskJoined  || [false, false];
+  S.taskClaimedDate = S.taskClaimedDate || ['',''];
+  for (let i = 0; i < 2; i++) {
+    const card  = document.getElementById('taskCard_' + i);
+    const verifyBtn = document.getElementById('verifyBtn_' + i);
+    if (!card || !verifyBtn) continue;
+    if (taskClaimedToday(i)) {
+      if(card) card.classList.add('done');
+      if(verifyBtn){ verifyBtn.textContent = '✅ CLAIMED'; verifyBtn.classList.add('claimed');
+        verifyBtn.disabled = true; verifyBtn.style.background = 'var(--green-bg)'; verifyBtn.style.color = 'var(--green)'; }
+      const joinBtn = card ? card.querySelector('.btn-task-join') : null;
+      if (joinBtn) joinBtn.style.opacity = '0.5';
+      const desc = card ? card.querySelector('.task-desc') : null;
+      if (desc) desc.textContent = '✅ Claimed today — resets tomorrow!';
+    } else {
+      if(card) card.classList.remove('done');
+      if(verifyBtn){ verifyBtn.textContent = 'VERIFY'; verifyBtn.classList.remove('claimed');
+        verifyBtn.disabled = true; verifyBtn.style.background = ''; verifyBtn.style.color = ''; }
+      S.taskJoined[i] = false;
+      const joinBtn = card ? card.querySelector('.btn-task-join') : null;
+      if (joinBtn) joinBtn.style.opacity = '1';
+    }
+  }
+}
+
+// ── TASK CONFIG ──
+// Apna Vercel URL yahan daalo (deploy ke baad)
+const VERIFY_API = 'https://YOUR-PROJECT.vercel.app/api/check-member';
+
+// Channel usernames (@ ke bina)
+const TASK_CHANNELS = ['Rewardsoftware', 'rewardsoftwarepayment'];
+
+// ══ VISIT TASK SYSTEM ══
+const VISIT_DURATION = 10;
+let visitLeftAt = [0, 0];
+
+function visitClaimedToday(idx) {
+  S.visitClaimedDate = S.visitClaimedDate || ['',''];
+  return S.visitClaimedDate[idx] === todayStr();
+}
+
+function startVisit(idx) {
+  if (visitClaimedToday(idx)) {
+    showToast('✅ Already claimed today!', 'info');
+    return;
+  }
+  // Save timestamp when user taps VISIT — no timer started
+  visitLeftAt[idx] = Date.now();
+  showToast('📲 Stay 10 sec on channel, then come back & tap CLAIM!', 'info');
+}
+
+
+function claimVisit(idx) {
+  if (visitClaimedToday(idx)) {
+    showToast('✅ Already claimed today!', 'info');
+    return;
+  }
+  if (!visitLeftAt[idx]) {
+    showToast('⏱ Tap VISIT first!', 'error');
+    return;
+  }
+  const secondsElapsed = Math.floor((Date.now() - visitLeftAt[idx]) / 1000);
+  if (secondsElapsed < VISIT_DURATION) {
+    const needed = VISIT_DURATION - secondsElapsed;
+    showToast('❌ Too fast! Stay ' + needed + ' more sec on channel.', 'error');
+    return;
+  }
+  // Grant coin
+  S.visitClaimedDate[idx] = todayStr();
+  S.coins += 1;
+  S.totalEarned=(S.totalEarned||0)+1;
+  S.taskEarned=(S.taskEarned||0)+1; S.taskEarnedDate=todayStr();
+  addHistory('task', 1, '📺 Daily Visit: ' + TASK_NAMES[idx]);
+  saveState(); updateUI(); confetti();
+  showToast('🪙 +1 Coin! Daily visit reward claimed!', 'success');
+  renderVisitTasks();
+}
+
+function renderVisitTasks() {
+  S.visitClaimedDate = S.visitClaimedDate || ['',''];
+  for (let i = 0; i < 2; i++) {
+    const card = document.getElementById('visitCard_' + i);
+    const btn  = document.getElementById('visitBtn_' + i);
+    const txt  = document.getElementById('visitBtnTxt_' + i);
+    if (!card || !btn || !txt) continue;
+    if (visitClaimedToday(i)) {
+      if(card) card.classList.add('done');
+      if(btn){ btn.disabled=true; btn.style.background='var(--green-bg)'; btn.style.color='var(--green)'; }
+      if(txt) txt.innerHTML='✅ DONE';
+      const joinBtn = card ? card.querySelector('.btn-task-join') : null;
+      if(joinBtn) joinBtn.style.opacity='0.5';
+      const desc = card ? card.querySelector('.task-desc') : null;
+      if(desc) desc.textContent='✅ Visited today — resets at midnight!';
+    } else {
+      if(card) card.classList.remove('done');
+      if(btn){ btn.disabled=true; btn.style.background=''; btn.style.color=''; }
+      if(txt) txt.innerHTML='CLAIM';
+      const joinBtn = card ? card.querySelector('.btn-task-join') : null;
+      if(joinBtn) joinBtn.style.opacity='1';
+    }
+  }
+}
+
+
+function updateTaskStats() {
+  // Reset daily taskEarned if new day
+  if ((S.taskEarnedDate||'') !== todayStr()) { S.taskEarned=0; S.taskEarnedDate=todayStr(); }
+  const el = document.getElementById('taskEarned');
+  if(el) el.textContent = S.taskEarned || 0;
+  // Count completed tasks today
+  let done = 0;
+  for(let i=0;i<2;i++){
+    if(taskClaimedToday(i)) done++;
+    if(visitClaimedToday(i)) done++;
+  }
+  const tc = document.getElementById('taskCompleted');
+  if(tc) tc.textContent = done;
+  const ta = document.getElementById('taskAvail');
+  if(ta) ta.textContent = Math.max(0, 4 - done);
+  // Update PTC stats
+  updatePTCStats();
+}
+
+// ══ BITCOTASKS PTC SYSTEM ══
+
+// Daily reset check
+function ptcWatchedToday() {
+  S.ptcWatched = S.ptcWatched || 0;
+  S.ptcWatchedDate = S.ptcWatchedDate || '';
+  if (S.ptcWatchedDate !== todayStr()) {
+    S.ptcWatched = 0;
+    S.ptcWatchedDate = todayStr();
+    saveState();
+  }
+  return S.ptcWatched;
+}
+
+function ptcAdClaimedToday(adId) {
+  S.ptcClaimed = S.ptcClaimed || {};
+  return S.ptcClaimed[adId] === todayStr();
+}
+
+function updatePTCStats() {
+  const watched = ptcWatchedToday();
+  const el1 = document.getElementById('ptcWatched');
+  if(el1) el1.textContent = watched;
+  const el2 = document.getElementById('ptcEarnedStat');
+  if(el2) el2.textContent = S.ptcEarned || 0;
+}
+
+// Telegram user ID fetch
+function getTelegramUserId() {
+  const tg = window.Telegram?.WebApp;
+  return tg?.initDataUnsafe?.user?.id || '0';
+}
+
+// User IP fetch (free service)
+async function getUserIP() {
+  try {
+    const r = await fetch('https://api.ipify.org?format=json');
+    const d = await r.json();
+    return d.ip || '0.0.0.0';
+  } catch(e) {
+    return '0.0.0.0';
+  }
+}
+
+// ── MAIN: Load PTC Ads from BitcoTasks API ──
+async function loadPTCAds() {
+  const apiKey = CFG.BITCOTASKS_API_KEY;
+
+  // Config check
+  if (!apiKey || apiKey === 'YOUR_BITCOTASKS_API_KEY') {
+    document.getElementById('ptcConfigNotice').style.display = 'block';
+    document.getElementById('ptcAdsList').innerHTML = `
+      <div style="text-align:center;padding:20px;color:var(--red);font-weight:700;font-size:13px">
+        ⚠️ BitcoTasks API Key set nahi hai!<br>
+        <span style="font-size:11px;color:var(--muted)">CFG.BITCOTASKS_API_KEY replace karo.</span>
+      </div>`;
+    return;
+  }
+
+  document.getElementById('ptcConfigNotice').style.display = 'none';
+
+  const btn = document.getElementById('ptcRefreshBtn');
+  if(btn) { btn.disabled = true; btn.textContent = '⏳ Loading...'; }
+
+  const userId = getTelegramUserId();
+  const userIp = await getUserIP();
+
+  const apiUrl = `https://bitcotasks.com/api/${apiKey}/${userId}/${userIp}`;
+
+  try {
+    const headers = { 'Content-Type': 'application/json' };
+    if (CFG.BITCOTASKS_BEARER && CFG.BITCOTASKS_BEARER !== 'YOUR_BEARER_TOKEN') {
+      headers['Authorization'] = 'Bearer ' + CFG.BITCOTASKS_BEARER;
+    }
+
+    const res = await fetch(apiUrl, { method: 'GET', headers });
+
+    if (!res.ok) throw new Error('API error: ' + res.status);
+
+    const data = await res.json();
+    renderPTCAds(data);
+
+    const avail = document.getElementById('ptcAdsAvail');
+    if(avail) {
+      const count = Array.isArray(data) ? data.length : (data.ads ? data.ads.length : '?');
+      avail.textContent = count;
+    }
+
+  } catch(err) {
+    document.getElementById('ptcAdsList').innerHTML = `
+      <div style="text-align:center;padding:20px;color:var(--red);font-weight:700;font-size:13px">
+        ❌ Ads load nahi hue.<br>
+        <span style="font-size:11px;color:var(--muted)">${err.message}</span><br>
+        <span style="font-size:11px;color:var(--muted)">API key check karo ya baad mein try karo.</span>
+      </div>`;
+  } finally {
+    if(btn) { btn.disabled = false; btn.textContent = '🔄 Refresh Ads'; }
+  }
+}
+
+// ── Render PTC Ad Cards ──
+function renderPTCAds(data) {
+  // BitcoTasks API response normalize karo
+  let ads = [];
+  if (Array.isArray(data)) {
+    ads = data;
+  } else if (data && Array.isArray(data.ads)) {
+    ads = data.ads;
+  } else if (data && typeof data === 'object') {
+    // Agar object hai to values try karo
+    ads = Object.values(data).filter(v => v && v.url);
+  }
+
+  const container = document.getElementById('ptcAdsList');
+
+  if (!ads.length) {
+    container.innerHTML = `
+      <div style="text-align:center;padding:22px;color:var(--muted);font-size:13px;font-weight:700">
+        😴 Abhi koi ads available nahi hain.<br>
+        <span style="font-size:11px">Kuch der baad Refresh karo!</span>
+      </div>`;
+    return;
+  }
+
+  const watched = ptcWatchedToday();
+  let html = '';
+
+  ads.forEach((ad, i) => {
+    // BitcoTasks response fields normalize
+    const adId  = ad.id || ad.task_id || ('ad_' + i);
+    const title = ad.title || ad.name || ('Ad #' + (i+1));
+    const url   = ad.url || ad.link || ad.redirect || '#';
+    const reward= ad.reward || ad.coins || CFG.PTC_COINS_PER_AD;
+    const timer = ad.timer || ad.wait || CFG.PTC_WAIT_SECONDS;
+
+    const isClaimed = ptcAdClaimedToday(adId);
+    const isViewing = !!S.ptcViewedAt?.[adId];
+    const maxReached = watched >= CFG.PTC_MAX_PER_DAY;
+
+    let statusBadge = '';
+    let viewBtn = '';
+    let claimBtn = '';
+
+    if (isClaimed) {
+      statusBadge = `<span class="task-done-badge">✅ Claimed Today</span>`;
+      viewBtn = `<a class="btn-task-join" style="opacity:0.5;pointer-events:none">VIEW</a>`;
+      claimBtn = `<button class="btn-task-claim claimed" disabled>✅ DONE</button>`;
+    } else if (maxReached) {
+      statusBadge = `<span class="task-reward-badge">⚠️ Daily limit reached</span>`;
+      viewBtn = `<a class="btn-task-join" style="opacity:0.5;pointer-events:none">VIEW</a>`;
+      claimBtn = `<button class="btn-task-claim" disabled>CLAIM</button>`;
+    } else {
+      statusBadge = `<span class="task-reward-badge">🪙 +${reward} Coin${reward>1?'s':''}</span>`;
+      viewBtn = `<a class="btn-task-join" href="${url}" target="_blank"
+        onclick="ptcStartView('${adId}', ${timer})" style="cursor:pointer">VIEW →</a>`;
+      claimBtn = `<button class="btn-task-claim" id="ptcClaim_${adId}"
+        onclick="ptcClaim('${adId}', ${reward})"
+        ${isViewing ? '' : 'disabled'}>CLAIM</button>`;
+    }
+
+    html += `
+      <div class="task-card ${isClaimed ? 'done' : ''}" id="ptcCard_${adId}">
+        <div class="task-left">
+          <div class="task-icon" style="background:rgba(255,144,0,0.12)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <rect x="2" y="4" width="20" height="16" rx="3" fill="#FF9000" opacity="0.15" stroke="#FF9000" stroke-width="1.5"/>
+              <path d="M8 9l8 3-8 3V9z" fill="#FF9000"/>
+              <circle cx="19" cy="5" r="3" fill="var(--green)"/>
+            </svg>
+          </div>
+          <div class="task-info">
+            <div class="task-name">${escHtml(title)}</div>
+            <div class="task-desc">⏱ Watch ${timer}s → Earn Coins</div>
+            ${statusBadge}
+          </div>
+        </div>
+        <div class="task-actions">
+          ${viewBtn}
+          ${claimBtn}
+        </div>
+      </div>`;
+  });
+
+  container.innerHTML = html;
+
+  // Agar koi ad pehle se viewing state mein hai, timer resume karo
+  if (S.ptcViewedAt) {
+    ads.forEach((ad, i) => {
+      const adId = ad.id || ad.task_id || ('ad_' + i);
+      const timer = ad.timer || ad.wait || CFG.PTC_WAIT_SECONDS;
+      if (S.ptcViewedAt[adId] && !ptcAdClaimedToday(adId)) {
+        const elapsed = Math.floor((Date.now() - S.ptcViewedAt[adId]) / 1000);
+        const remaining = timer - elapsed;
+        if (remaining <= 0) {
+          // Timer complete ho chuka — claim enable karo
+          const claimEl = document.getElementById('ptcClaim_' + adId);
+          if(claimEl) { claimEl.disabled = false; claimEl.style.background = 'linear-gradient(135deg,var(--green),#00aa55)'; claimEl.style.color='#fff'; }
+        } else {
+          // Timer abhi bhi chal raha hai
+          ptcStartTimer(adId, remaining);
+        }
+      }
+    });
+  }
+}
+
+// HTML escape helper
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── User tapped VIEW button ──
+function ptcStartView(adId, waitSecs) {
+  S.ptcViewedAt = S.ptcViewedAt || {};
+  S.ptcViewedAt[adId] = Date.now();
+  saveState();
+
+  showToast(`📺 Ad open hua! ${waitSecs}s baad CLAIM tap karo`, 'info');
+  ptcStartTimer(adId, waitSecs);
+}
+
+// ── Countdown timer on CLAIM button ──
+function ptcStartTimer(adId, secs) {
+  const claimEl = document.getElementById('ptcClaim_' + adId);
+  if (!claimEl) return;
+
+  claimEl.disabled = true;
+  claimEl.textContent = `⏳ ${secs}s`;
+
+  const iv = setInterval(() => {
+    secs--;
+    if (!document.getElementById('ptcClaim_' + adId)) { clearInterval(iv); return; }
+    if (secs <= 0) {
+      clearInterval(iv);
+      const el = document.getElementById('ptcClaim_' + adId);
+      if (el && !ptcAdClaimedToday(adId)) {
+        el.disabled = false;
+        el.textContent = '✅ CLAIM';
+        el.style.background = 'linear-gradient(135deg,var(--green),#00aa55)';
+        el.style.color = '#fff';
+        showToast('✅ Timer done! CLAIM tap karo!', 'success');
+      }
+    } else {
+      const el = document.getElementById('ptcClaim_' + adId);
+      if (el) el.textContent = `⏳ ${secs}s`;
+    }
+  }, 1000);
+}
+
+// ── User claims reward ──
+function ptcClaim(adId, reward) {
+  if (ptcAdClaimedToday(adId)) {
+    showToast('✅ Yeh ad aaj claim ho chuki hai!', 'info');
+    return;
+  }
+
+  // Check: view kiya tha?
+  S.ptcViewedAt = S.ptcViewedAt || {};
+  if (!S.ptcViewedAt[adId]) {
+    showToast('⚠️ Pehle VIEW tap karo!', 'error');
+    return;
+  }
+
+  // Daily limit check
+  if (ptcWatchedToday() >= CFG.PTC_MAX_PER_DAY) {
+    showToast('❌ Aaj ka PTC limit reach ho gaya!', 'error');
+    return;
+  }
+
+  // ✅ Grant reward
+  S.ptcClaimed = S.ptcClaimed || {};
+  S.ptcClaimed[adId] = todayStr();
+  S.ptcWatched = (S.ptcWatched || 0) + 1;
+  S.ptcWatchedDate = todayStr();
+  S.ptcEarned = (S.ptcEarned || 0) + reward;
+
+  S.coins += reward;
+  S.totalEarned = (S.totalEarned || 0) + reward;
+  S.taskEarned = (S.taskEarned || 0) + reward;
+  S.taskEarnedDate = todayStr();
+
+  addHistory('task', reward, '📺 PTC Ad: ' + adId);
+  saveState();
+  updateUI();
+  confetti();
+  showToast(`🪙 +${reward} Coin${reward>1?'s':''} earned! PTC ad claim!`, 'success');
+
+  // Update card to done state
+  const card = document.getElementById('ptcCard_' + adId);
+  if (card) {
+    card.classList.add('done');
+    const claimEl = document.getElementById('ptcClaim_' + adId);
+    if (claimEl) { claimEl.disabled = true; claimEl.textContent = '✅ DONE'; claimEl.style.background=''; claimEl.style.color=''; claimEl.classList.add('claimed'); }
+    const viewEl = card.querySelector('.btn-task-join');
+    if (viewEl) { viewEl.style.opacity='0.5'; viewEl.style.pointerEvents='none'; }
+  }
+
+  updatePTCStats();
+}
+
+function markJoined(idx) {
+  if (taskClaimedToday(idx)) return;
+  setTimeout(() => {
+    const verifyBtn = document.getElementById('verifyBtn_' + idx);
+    if (verifyBtn && !taskClaimedToday(idx)) {
+      verifyBtn.disabled = false;
+      verifyBtn.textContent = '✔ VERIFY';
+      verifyBtn.style.background = 'linear-gradient(135deg,var(--green),#00aa55)';
+      verifyBtn.style.color = '#fff';
+    }
+    showToast('✔ Come back and tap VERIFY!', 'info');
+  }, 4000);
+}
+
+async function verifyAndClaim(idx) {
+  if (taskClaimedToday(idx)) { showToast('✅ Already claimed today! Come back tomorrow.', 'info'); return; }
+
+  // Get Telegram user_id from WebApp
+  const tg = window.Telegram?.WebApp;
+  const userId = tg?.initDataUnsafe?.user?.id;
+
+  if (!userId) {
+    showToast('❌ Open in Telegram app!', 'error');
+    return;
+  }
+
+  const verifyBtn = document.getElementById('verifyBtn_' + idx);
+  if (verifyBtn) { verifyBtn.disabled = true; verifyBtn.textContent = '⏳ Checking...'; }
+
+  try {
+    const res = await fetch(VERIFY_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: userId, channel_username: TASK_CHANNELS[idx] })
+    });
+    const data = await res.json();
+
+    if (data.ok && data.member) {
+      // ✅ Real member confirmed
+      S.taskJoined[idx] = true;
+      S.taskClaimedDate[idx] = todayStr();
+      S.coins += 1;
+      S.totalEarned=(S.totalEarned||0)+1;
+      S.taskEarned=(S.taskEarned||0)+1; S.taskEarnedDate=todayStr();
+      addHistory('task', 1, '✅ Daily Task: ' + TASK_NAMES[idx]);
+      saveState(); updateUI(); confetti();
+      showToast('<svg width="16" height="16" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block;margin-right:3px"><defs><linearGradient id="rT" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFD234"/><stop offset="45%" stop-color="#FF9000"/><stop offset="100%" stop-color="#B84400"/></linearGradient><radialGradient id="fT" cx="33%" cy="28%" r="72%"><stop offset="0%" stop-color="#FFF5B0"/><stop offset="40%" stop-color="#FFBE38"/><stop offset="100%" stop-color="#C85200"/></radialGradient></defs><circle cx="20" cy="22.5" r="18" fill="#6B2000" opacity="0.65"/><circle cx="20" cy="20" r="18" fill="url(#rT)"/><circle cx="20" cy="20" r="15" fill="url(#fT)"/><ellipse cx="14" cy="12.5" rx="6.5" ry="3.5" fill="rgba(255,255,255,0.30)" transform="rotate(-32 14 12.5)"/><text x="20" y="25.5" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="800" font-size="14" fill="rgba(80,18,0,0.92)" letter-spacing="1">CR</text></svg>+1 Coin Earned!', 'success');
+      renderTasks();
+    } else {
+      if (verifyBtn) { verifyBtn.disabled = false; verifyBtn.textContent = '✔ VERIFY'; }
+      showToast('❌ You have not joined the channel yet!', 'error');
+    }
+  } catch (err) {
+    if (verifyBtn) { verifyBtn.disabled = false; verifyBtn.textContent = '✔ VERIFY'; }
+    showToast('❌ Network error. Please try again.', 'error');
+  }
+}
+
+// ══ BITCOTASKS OFFERWALL ══
+
+function openOfferwall() {
+  const apiKey = CFG.BITCOTASKS_API_KEY;
+  if (!apiKey || apiKey === 'YOUR_BITCOTASKS_API_KEY') {
+    showToast('⚠️ API Key set nahi hai!', 'error');
+    return;
+  }
+
+  const tgApp = window.Telegram?.WebApp;
+  const userId = tgApp?.initDataUnsafe?.user?.id || 'guest';
+
+  const url = `https://bitcotasks.com/offerwall/${apiKey}/${userId}`;
+
+  // Track stats
+  S.offerwallOpened = (S.offerwallOpened || 0) + 1;
+  if ((S.offerwallTodayDate || '') !== todayStr()) {
+    S.offerwallToday = 0;
+    S.offerwallTodayDate = todayStr();
+  }
+  saveState();
+  updateOfferwallUI();
+
+  // Open in new tab
+  window.open(url, '_blank');
+  showToast('🚀 Offerwall opening...', 'info');
+}
+
+function updateOfferwallUI() {
+  const el1 = document.getElementById('offerwallOpened');
+  if (el1) el1.textContent = S.offerwallOpened || 0;
+  const el2 = document.getElementById('offerwallEarned');
+  if (el2) el2.textContent = S.offerwallEarned || 0;
+  const el3 = document.getElementById('offerwallToday');
+  if ((S.offerwallTodayDate || '') !== todayStr()) S.offerwallToday = 0;
+  if (el3) el3.textContent = S.offerwallToday || 0;
+}
+
+// ══ BOOT ══
+updateUI();
+window.addEventListener('load',()=>{
+  setTimeout(initScratch, 80);
+  setTimeout(updateLevelUI, 150);
+  setTimeout(updateUI, 100);
+  setTimeout(updateOfferwallUI, 160);
+});
+</script>
+</body>
+</html>
