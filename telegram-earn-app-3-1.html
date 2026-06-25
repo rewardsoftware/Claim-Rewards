@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>EarnZone - Scratch & Earn</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<!-- Monetag Rewarded Popup -->
+<script>
+  // Load Monetag SDK dynamically after page load to avoid Telegram blocking
+  function loadMonetag() {
+    return new Promise((resolve) => {
+      if (typeof show_11196258 === 'function') { resolve(); return; }
+      const s = document.createElement('script');
+      s.src = '//libtl.com/sdk.js';
+      s.setAttribute('data-zone', '11196258');
+      s.setAttribute('data-sdk', 'show_11196258');
+      s.onload = () => { setTimeout(resolve, 800); };
+      s.onerror = () => resolve();
+      document.head.appendChild(s);
+    });
+  }
+  // Preload on page ready
+  window.addEventListener('load', () => setTimeout(loadMonetag, 1500));
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Premium White + Purple + Green + Blue */
+  --bg:#F8F6FF;
+  --surface:#FFFFFF;
+  --card:#FFFFFF;
+  --card2:#F3F0FF;
+  --border:#E2D9FF;
+  --border2:#D4F0E8;
+
+  --purple:#7C3AED;
+  --purple2:#9D60F8;
+  --purple3:#C4A7FF;
+  --purple-bg:rgba(124,58,237,0.08);
+  --purple-glow:rgba(124,58,237,0.18);
+
+  --green:#00C873;
+  --green2:#00E88A;
+  --green-bg:rgba(0,200,115,0.09);
+
+  --blue:#1E7FFF;
+  --blue2:#4DA3FF;
+  --blue-bg:rgba(30,127,255,0.09);
+
+  --red:#FF4757;
+  --text:#1A0A3C;
+  --text2:#3B2A6E;
+  --muted:#5B4A8A;
+  --coin:#7C3AED;
+  --coin2:#9D60F8;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;padding-bottom:80px;}
+
+/* Mesh background */
+body::before{content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 10% 0%,rgba(124,58,237,0.10),transparent 55%),
+    radial-gradient(ellipse 50% 40% at 90% 100%,rgba(0,200,115,0.09),transparent 55%),
+    radial-gradient(ellipse 40% 35% at 80% 15%,rgba(30,127,255,0.07),transparent 50%);
+  pointer-events:none;z-index:0;}
+
+/* HEADER */
+.header{position:sticky;top:0;z-index:100;
+  background:rgba(255,255,255,0.88);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-bottom:1.5px solid var(--border);
+  padding:12px 16px;display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 2px 16px rgba(124,58,237,0.07);}
+.header-title{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;
+  background:linear-gradient(120deg,var(--purple),var(--blue));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.5px;}
+.coin-chip{background:linear-gradient(135deg,var(--purple-bg),rgba(124,58,237,0.04));
+  border:1.5px solid var(--purple3);border-radius:22px;padding:6px 14px;
+  display:flex;align-items:center;gap:7px;font-weight:700;font-size:15px;color:var(--purple);
+  box-shadow:0 2px 10px rgba(124,58,237,0.10);}
+.coin-chip-icon{font-size:17px;line-height:1;}
+.coin-usd{font-size:10px;color:#5B4A8A;font-weight:700;}
+
+
+
+/* PAGES */
+.page{display:none;padding:14px;position:relative;z-index:1;}
+.page.active{display:block;}
+.section-title{font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:2px;
+  color:#5B4A8A;text-transform:uppercase;margin-bottom:11px;font-weight:600;}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:16px;}
+.stat-card{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;
+  padding:12px 7px;text-align:center;
+  box-shadow:0 2px 10px rgba(124,58,237,0.06);}
+.stat-val{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--purple);}
+.stat-label{font-size:10px;color:var(--text);margin-top:3px;line-height:1.2;font-weight:700;}
+
+/* LEVEL CARD */
+.level-card{
+  border-radius:18px;padding:0;margin-bottom:14px;overflow:hidden;
+  box-shadow:0 8px 28px rgba(124,58,237,0.18);}
+.lv-header{padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;}
+.lv-left{display:flex;align-items:center;gap:12px;}
+.lv-icon-wrap{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;
+  justify-content:center;font-size:26px;background:rgba(255,255,255,0.15);
+  box-shadow:0 2px 8px rgba(0,0,0,0.12);}
+.lv-name{font-size:15px;font-weight:800;color:#fff;margin-bottom:3px;}
+.lv-badge{display:inline-block;font-size:10px;font-weight:700;border-radius:20px;
+  padding:2px 9px;background:rgba(255,255,255,0.2);color:#fff;border:1px solid rgba(255,255,255,0.3);}
+.lv-earned{font-size:11px;color:rgba(255,255,255,0.80);font-weight:600;margin-top:2px;}
+.lv-right{text-align:center;}
+.lv-wd-box{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);
+  border-radius:12px;padding:8px 12px;min-width:62px;}
+.lv-wd-num{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:800;color:#fff;line-height:1;}
+.lv-wd-label{font-size:9px;color:rgba(255,255,255,0.80);font-weight:700;text-transform:uppercase;letter-spacing:.5px;line-height:1.4;}
+.lv-bar-section{padding:0 16px 12px;}
+.lv-bar-top{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,0.75);font-weight:700;margin-bottom:5px;}
+.lv-bar-wrap{background:rgba(255,255,255,0.2);border-radius:8px;height:8px;overflow:hidden;}
+.lv-bar{height:100%;border-radius:8px;background:rgba(255,255,255,0.9);transition:width 0.7s ease;min-width:5px;}
+.lv-footer{background:rgba(0,0,0,0.12);padding:9px 16px;display:flex;justify-content:space-between;align-items:center;}
+.lv-footer-left{font-size:11px;color:rgba(255,255,255,0.85);font-weight:600;}
+.lv-footer-right{font-size:11px;color:#fff;font-weight:800;}
+.lv-levels-row{display:flex;gap:6px;padding:0 16px 13px;}
+.lv-step{flex:1;border-radius:8px;padding:6px 4px;text-align:center;background:rgba(255,255,255,0.10);
+  border:1px solid rgba(255,255,255,0.15);}
+.lv-step.active{background:rgba(255,255,255,0.22);border-color:rgba(255,255,255,0.5);}
+.lv-step-icon{font-size:14px;}
+.lv-step-name{font-size:9px;color:rgba(255,255,255,0.80);font-weight:700;margin-top:2px;}
+.lv-step-limit{font-size:10px;color:#fff;font-weight:800;}
+
+/* SECTION TITLE ICONS */
+.section-title{display:flex;align-items:center;gap:7px;}
+.st-icon{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.st-scratch{background:var(--purple-bg);
+  box-shadow:0 0 8px rgba(124,58,237,0.25),0 0 16px rgba(124,58,237,0.10);}
+.st-scratch svg{filter:drop-shadow(0 0 4px rgba(124,58,237,0.75));}
+.st-captcha{background:var(--blue-bg);
+  box-shadow:0 0 8px rgba(30,127,255,0.25),0 0 16px rgba(30,127,255,0.10);}
+.st-captcha svg{filter:drop-shadow(0 0 4px rgba(30,127,255,0.75));}
+
+/* BALANCE CARD */
+.balance-card{background:linear-gradient(135deg,var(--purple),var(--blue));
+  border-radius:18px;padding:16px 18px;margin-bottom:14px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 6px 24px rgba(124,58,237,0.30);}
+.balance-card-left .bc-label{font-size:11px;color:rgba(255,255,255,0.85);font-weight:700;letter-spacing:.8px;text-transform:uppercase;}
+.balance-card-left .bc-coins{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;color:#fff;margin:2px 0;display:flex;align-items:center;gap:8px;}
+.balance-card-left .bc-usd{font-size:12px;color:rgba(255,255,255,0.85);font-weight:700;}
+.balance-card-right{font-size:44px;opacity:0.30;}
+
+/* SCRATCH */
+.scratch-area{background:var(--surface);border:1.5px solid var(--border);border-radius:18px;
+  padding:16px 14px;margin-bottom:13px;text-align:center;
+  box-shadow:0 4px 20px rgba(124,58,237,0.08);}
+#scratchWrap{position:relative;width:100%;height:158px;margin:0 auto 13px;border-radius:13px;overflow:hidden;
+  cursor:crosshair;box-shadow:0 0 0 2px var(--purple3),0 6px 28px rgba(124,58,237,0.16);}
+.scratch-reward{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#F3F0FF,#EAF4FF);border-radius:13px;}
+.reward-amount{font-family:'Space Grotesk',sans-serif;font-size:36px;font-weight:700;
+  background:linear-gradient(120deg,var(--purple),var(--blue));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.reward-unit{font-size:12px;color:var(--text);font-weight:700;margin-top:3px;display:flex;align-items:center;gap:4px;}
+.reward-unit span{color:var(--purple);font-size:13px;}
+.reward-emoji{font-size:28px;margin-bottom:5px;}
+#scratchCanvas{position:absolute;inset:0;border-radius:13px;touch-action:none;display:block;}
+.scratch-info{font-size:12px;color:var(--text);margin-bottom:11px;font-weight:700;}
+.scratch-info b{color:var(--blue);}
+
+
+
+/* BUTTONS */
+.btn{width:100%;padding:13px;border:none;border-radius:12px;
+  font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.6px;cursor:pointer;transition:all 0.2s;margin-bottom:9px;}
+.btn:active{transform:scale(0.97);}
+.btn:disabled{background:#E2D9FF!important;color:var(--muted)!important;box-shadow:none!important;cursor:not-allowed;transform:none!important;}
+.btn-gold{background:linear-gradient(135deg,var(--purple),var(--purple2));color:#fff;
+  box-shadow:0 4px 18px rgba(124,58,237,0.30);}
+.btn-cyan{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;
+  box-shadow:0 4px 18px rgba(30,127,255,0.25);}
+.btn-green{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;
+  box-shadow:0 4px 18px rgba(0,200,115,0.28);}
+
+/* EARN SLIDER */
+.earn-slider-wrap{border-radius:18px;overflow:hidden;margin-bottom:16px;
+  box-shadow:0 8px 28px rgba(124,58,237,0.16);position:relative;}
+.earn-slider-track{display:flex;transition:transform 0.5s ease;}
+.earn-slide{flex:0 0 100%;min-width:100%;box-sizing:border-box;
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+  padding:22px 18px 18px;text-align:center;}
+.earn-slide-icon{font-size:38px;margin-bottom:6px;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.2));}
+.earn-slide-name{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:800;color:#fff;margin-bottom:2px;}
+.earn-slide-desc{font-size:12px;color:rgba(255,255,255,0.80);font-weight:600;margin-bottom:14px;}
+.earn-slider-dots{display:flex;justify-content:center;gap:6px;padding:10px 0;background:rgba(255,255,255,0.96);}
+.earn-dot{width:7px;height:7px;border-radius:50%;background:var(--border);cursor:pointer;transition:all 0.25s;}
+.earn-dot.active{background:var(--purple);width:18px;border-radius:5px;}
+
+/* EARN BOT CARDS */
+.earn-bot-card{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;
+  padding:14px 13px;margin-bottom:11px;display:flex;align-items:center;
+  justify-content:space-between;gap:10px;box-shadow:0 2px 12px rgba(124,58,237,0.06);}
+.earn-bot-left{display:flex;align-items:center;gap:12px;flex:1;min-width:0;}
+.earn-bot-icon{width:44px;height:44px;border-radius:13px;background:var(--purple-bg);
+  display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;}
+.earn-bot-name{font-size:13px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:2px;}
+.earn-bot-desc{font-size:11px;color:var(--muted);font-weight:700;}
+.btn-start-earn{flex-shrink:0;display:block;background:linear-gradient(135deg,var(--green),var(--green2));
+  color:#fff;font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:800;
+  padding:10px 14px;border-radius:10px;text-decoration:none;text-align:center;
+  letter-spacing:.4px;white-space:nowrap;box-shadow:0 3px 12px rgba(0,200,115,0.30);}
+.btn-start-earn:active{transform:scale(0.97);}
+.earn-slide .btn-start-earn{display:inline-block;width:100%;padding:12px;}
+
+.cooldown-wrap{background:var(--border);border-radius:5px;height:5px;margin-top:7px;}
+.cooldown-bar{height:100%;border-radius:5px;
+  background:linear-gradient(90deg,var(--purple),var(--blue));transition:width 1s linear;}
+.cooldown-txt{font-size:11px;color:var(--text);margin-top:5px;text-align:center;font-weight:700;}
+
+/* CAPTCHA */
+.captcha-card{background:var(--surface);border:1.5px solid var(--border);border-radius:18px;
+  padding:16px 14px;margin-bottom:13px;box-shadow:0 4px 20px rgba(124,58,237,0.07);}
+.captcha-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px;flex-wrap:wrap;gap:6px;}
+.badge-type{background:var(--blue-bg);border:1.5px solid rgba(30,127,255,0.25);
+  border-radius:20px;padding:4px 12px;font-size:11px;color:var(--blue);font-weight:700;}
+.badge-reward{background:var(--purple-bg);border:1.5px solid rgba(124,58,237,0.25);
+  border-radius:20px;padding:4px 12px;font-size:11px;color:var(--purple);font-weight:700;
+  display:flex;align-items:center;gap:4px;}
+
+.captcha-instruction{font-size:15px;color:var(--text);margin-bottom:13px;font-weight:700;text-align:center;line-height:1.4;}
+.captcha-instruction .target-emoji{font-size:28px;display:block;margin:6px 0;}
+.captcha-instruction .sub{font-size:12px;color:var(--text);font-weight:700;}
+
+.img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:13px;}
+.img-tile{aspect-ratio:1;border-radius:12px;border:2px solid var(--border);cursor:pointer;
+  transition:all 0.15s;display:flex;align-items:center;justify-content:center;
+  background:#FAF8FF;font-size:32px;position:relative;user-select:none;-webkit-user-select:none;}
+.img-tile:active{transform:scale(0.9);}
+.img-tile.selected{border-color:var(--purple);background:var(--purple-bg);transform:scale(0.93);}
+.img-tile.selected::after{content:'✓';position:absolute;top:4px;right:4px;
+  background:var(--purple);color:#fff;border-radius:50%;width:18px;height:18px;
+  font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;line-height:18px;}
+.img-tile.correct-reveal{border-color:var(--green);background:var(--green-bg);}
+.img-tile.wrong-reveal{border-color:var(--red);background:rgba(255,71,87,0.08);}
+
+.streak-bar{display:flex;gap:5px;margin-bottom:12px;justify-content:center;}
+.streak-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:13px;
+  color:#6B5A9E;font-weight:700;font-family:'Space Grotesk',sans-serif;transition:all 0.3s;}
+.streak-dot.active{border-color:var(--purple);color:var(--purple);background:var(--purple-bg);}
+.streak-dot.fire{border-color:#FF6B35;background:rgba(255,107,53,0.10);color:#FF6B35;}
+
+/* TOAST */
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-12px);
+  background:#fff;border:1.5px solid var(--border);border-radius:14px;
+  padding:10px 20px;font-weight:700;font-size:13px;opacity:0;
+  transition:all 0.25s;z-index:9999;white-space:nowrap;pointer-events:none;max-width:90vw;
+  box-shadow:0 6px 24px rgba(124,58,237,0.12);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.success{border-color:var(--green);color:var(--green);}
+.toast.error{border-color:var(--red);color:var(--red);}
+.toast.info{border-color:var(--blue);color:var(--blue);}
+.toast.gold{border-color:var(--purple);color:var(--purple);}
+
+/* HISTORY */
+.history-item{display:flex;align-items:center;justify-content:space-between;
+  padding:11px 12px;background:var(--surface);border:1.5px solid var(--border);
+  border-radius:12px;margin-bottom:8px;box-shadow:0 2px 8px rgba(124,58,237,0.05);}
+.history-left{display:flex;align-items:center;gap:9px;}
+.h-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.h-type{font-size:13px;font-weight:700;color:var(--text);}
+.h-time{font-size:10px;color:#5B4A8A;font-weight:700;}
+.h-amount{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;}
+
+/* WITHDRAW */
+.wd-card{background:var(--surface);border:1.5px solid var(--border);border-radius:18px;
+  padding:16px 14px;margin-bottom:13px;box-shadow:0 4px 20px rgba(124,58,237,0.08);}
+.wd-balance{text-align:center;margin-bottom:16px;}
+.wd-bal-coins{font-family:'Space Grotesk',sans-serif;font-size:34px;font-weight:700;
+  color:var(--purple);margin:4px 0;display:flex;align-items:center;justify-content:center;gap:8px;}
+.wd-bal-usd{font-size:13px;color:var(--text);font-weight:700;}
+.wd-rate{display:inline-block;background:var(--purple-bg);
+  border:1.5px solid rgba(124,58,237,0.2);border-radius:10px;
+  padding:5px 14px;font-size:11px;color:var(--purple);margin-bottom:14px;font-weight:700;}
+.input-group{margin-bottom:12px;}
+.input-label{font-size:11px;color:var(--text);margin-bottom:5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;}
+.input-field{width:100%;padding:12px 13px;background:#FAF8FF;
+  border:1.5px solid var(--border);border-radius:11px;
+  color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;
+  outline:none;transition:border-color 0.2s;}
+.input-field:focus{border-color:var(--purple);box-shadow:0 0 0 3px var(--purple-glow);}
+.wd-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.min-badge{background:rgba(255,71,87,0.08);border:1.5px solid rgba(255,71,87,0.25);
+  border-radius:8px;padding:4px 10px;font-size:11px;color:var(--red);font-weight:700;}
+.max-btn{background:none;border:none;color:var(--blue);font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:13px;font-weight:700;cursor:pointer;}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;
+  background:rgba(255,255,255,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1.5px solid var(--border);display:flex;
+  box-shadow:0 -4px 24px rgba(124,58,237,0.10);}
+.nav-btn{flex:1;padding:8px 4px 6px;background:none;border:none;color:#6B5A9E;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:9.5px;font-weight:700;
+  transition:all 0.25s;letter-spacing:.2px;}
+.nav-icon{width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+  border-radius:9px;transition:all 0.25s;}
+.nav-icon svg{width:20px;height:20px;transition:all 0.25s;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.nav-btn.active{color:var(--purple);}
+.nav-btn.active .nav-icon{background:var(--purple-bg);
+  box-shadow:0 0 10px rgba(124,58,237,0.30),0 0 22px rgba(124,58,237,0.12);}
+.nav-btn.active .nav-icon svg{stroke:var(--purple);
+  filter:drop-shadow(0 0 4px rgba(124,58,237,0.75)) drop-shadow(0 0 9px rgba(124,58,237,0.35));}
+
+/* MODALS */
+.modal-overlay{position:fixed;inset:0;background:rgba(10,18,40,0.55);backdrop-filter:blur(5px);
+  z-index:9000;display:flex;align-items:flex-end;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity 0.25s;}
+.modal-overlay.show{opacity:1;pointer-events:all;}
+.modal-box{background:#fff;border-radius:24px 24px 0 0;padding:22px 18px 36px;
+  width:100%;max-width:480px;transform:translateY(100%);
+  transition:transform 0.32s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 -8px 40px rgba(124,58,237,0.15);}
+.modal-overlay.show .modal-box{transform:translateY(0);}
+.modal-handle{width:38px;height:4px;background:var(--border);border-radius:4px;margin:0 auto 20px;}
+.modal-icon{width:68px;height:68px;border-radius:20px;margin:0 auto 14px;
+  display:flex;align-items:center;justify-content:center;}
+.modal-title{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;
+  color:var(--text);text-align:center;margin-bottom:6px;}
+.modal-sub{font-size:12px;color:var(--muted);text-align:center;font-weight:600;margin-bottom:18px;line-height:1.5;}
+.modal-detail-row{display:flex;justify-content:space-between;align-items:center;
+  padding:11px 14px;background:var(--bg);border-radius:12px;margin-bottom:8px;}
+.modal-detail-label{font-size:12px;color:var(--muted);font-weight:700;}
+.modal-detail-val{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--text);}
+.modal-btns{display:flex;gap:9px;margin-top:18px;}
+.modal-btns .btn{margin-bottom:0;flex:1;}
+
+/* CONFETTI */
+.cp{position:fixed;width:7px;height:7px;border-radius:2px;pointer-events:none;z-index:9999;animation:cf 1.5s ease-out forwards;}
+@keyframes cf{0%{transform:translateY(0) rotate(0);opacity:1;}100%{transform:translateY(100vh) rotate(720deg);opacity:0;}}
+
+/* EARN SLIDER */
+.earn-slider-wrap{position:relative;border-radius:18px;overflow:hidden;margin-bottom:14px;
+  box-shadow:0 8px 28px rgba(124,58,237,0.18);}
+.earn-slider-track{display:flex;transition:transform 0.55s cubic-bezier(.4,0,.2,1);}
+.earn-slide{min-width:100%;padding:22px 18px 26px;display:flex;flex-direction:column;
+  align-items:center;text-align:center;gap:9px;}
+.earn-slide-icon{width:54px;height:54px;border-radius:16px;background:rgba(255,255,255,0.18);
+  display:flex;align-items:center;justify-content:center;font-size:28px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.12);}
+.earn-slide-name{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:800;color:#fff;}
+.earn-slide-desc{font-size:11.5px;color:rgba(255,255,255,0.85);font-weight:600;margin-bottom:2px;}
+.btn-start-earn{display:inline-flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;
+  font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:800;
+  letter-spacing:.4px;padding:10px 22px;border-radius:30px;text-decoration:none;
+  box-shadow:0 4px 16px rgba(0,200,115,0.40);border:none;cursor:pointer;transition:transform 0.2s;}
+.btn-start-earn:active{transform:scale(0.96);}
+.earn-dots{position:absolute;bottom:10px;left:0;right:0;display:flex;justify-content:center;gap:6px;}
+.earn-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.45);
+  cursor:pointer;transition:all 0.25s;}
+.earn-dot.active{width:18px;border-radius:4px;background:#fff;}
+
+/* BOT CARDS */
+.bot-card{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;
+  padding:14px 13px;margin-bottom:11px;display:flex;align-items:center;
+  justify-content:space-between;gap:10px;box-shadow:0 2px 12px rgba(124,58,237,0.06);}
+.bot-left{display:flex;align-items:center;gap:12px;flex:1;min-width:0;}
+.bot-icon{width:44px;height:44px;border-radius:13px;background:var(--blue-bg);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.bot-info{min-width:0;}
+.bot-name{font-size:13px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:2px;}
+.bot-handle{font-size:11px;color:var(--muted);font-weight:600;}
+.btn-start-earn-sm{background:linear-gradient(135deg,var(--green),var(--green2));
+  color:#fff;font-family:'Space Grotesk',sans-serif;font-size:10.5px;font-weight:800;
+  padding:9px 15px;border-radius:9px;text-decoration:none;text-align:center;
+  letter-spacing:.4px;white-space:nowrap;box-shadow:0 3px 10px rgba(0,200,115,0.30);
+  flex-shrink:0;}
+
+.info-box{background:linear-gradient(135deg,#F5F0FF,#EEF6FF);
+  border:1.5px solid var(--border);border-radius:13px;
+  padding:12px 14px;font-size:12px;color:var(--text);line-height:1.6;font-weight:700;}
+.info-box strong{color:var(--text);font-weight:700;}
+
+/* COIN SVG */
+.coin-svg-lg{display:inline-flex;align-items:center;filter:drop-shadow(0 2px 6px rgba(124,58,237,0.5));}
+.coin-svg-sm{display:inline-flex;align-items:center;vertical-align:middle;filter:drop-shadow(0 1px 3px rgba(124,58,237,0.4));}
+
+/* LOADING SCREEN */
+#loadingScreen{
+  position:fixed;inset:0;z-index:99999;
+  background:linear-gradient(145deg,#F8F6FF 0%,#EEE8FF 50%,#E8F3FF 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity 0.5s ease, visibility 0.5s ease;
+}
+#loadingScreen.hide{opacity:0;visibility:hidden;pointer-events:none;}
+
+.ls-coin-wrap{position:relative;margin-bottom:28px;}
+.ls-coin{animation:lsCoinSpin 1.6s ease-in-out infinite;}
+@keyframes lsCoinSpin{
+  0%{transform:rotateY(0deg) scale(1);}
+  40%{transform:rotateY(180deg) scale(1.1);}
+  80%{transform:rotateY(360deg) scale(1);}
+  100%{transform:rotateY(360deg) scale(1);}
+}
+.ls-glow{
+  position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);
+  width:80px;height:16px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(124,58,237,0.35),transparent 70%);
+  animation:lsGlowPulse 1.6s ease-in-out infinite;
+}
+@keyframes lsGlowPulse{
+  0%,100%{opacity:0.5;transform:translateX(-50%) scaleX(1);}
+  40%{opacity:1;transform:translateX(-50%) scaleX(1.15);}
+}
+
+.ls-title{
+  font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;
+  background:linear-gradient(120deg,var(--purple),var(--blue));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:6px;letter-spacing:.5px;
+}
+.ls-sub{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:30px;}
+
+.ls-bar-wrap{width:200px;height:6px;background:var(--border);border-radius:6px;overflow:hidden;margin-bottom:14px;}
+.ls-bar{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--purple),var(--blue));width:0%;transition:width 0.1s linear;}
+
+.ls-tip{font-size:11px;color:var(--muted);font-weight:600;text-align:center;padding:0 32px;line-height:1.6;min-height:32px;}
+
+</style>
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div id="loadingScreen">
+  <div class="ls-coin-wrap">
+    <div class="ls-coin">
+      <svg width="88" height="88" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="rLS" cx="38%" cy="32%" r="68%">
+            <stop offset="0%" stop-color="#FFF5B0"/>
+            <stop offset="40%" stop-color="#FFD234"/>
+            <stop offset="75%" stop-color="#FF8C00"/>
+            <stop offset="100%" stop-color="#B84400"/>
+          </radialGradient>
+          <filter id="gLS"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#8B3A00" flood-opacity="0.55"/></filter>
+        </defs>
+        <circle cx="22" cy="24" r="18" fill="#7A2800" opacity="0.5"/>
+        <circle cx="22" cy="22" r="20" fill="url(#rLS)" filter="url(#gLS)"/>
+        <circle cx="22" cy="22" r="18.5" fill="none" stroke="rgba(255,245,150,0.5)" stroke-width="1"/>
+        <ellipse cx="15" cy="14" rx="7" ry="4" fill="white" opacity="0.25" transform="rotate(-30 15 14)"/>
+        <text x="22" y="29" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="13" fill="#5C1A00" letter-spacing="0.5">CR</text>
+      </svg>
+    </div>
+    <div class="ls-glow"></div>
+  </div>
+  <div class="ls-title">🎁 Claim Reward</div>
+  <div class="ls-sub">Scratch • Captcha</div>
+  <div class="ls-bar-wrap"><div class="ls-bar" id="lsBar"></div></div>
+  <div class="ls-tip" id="lsTip">Loading your rewards...</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-title">🎁 Claim Reward</div>
+  <div class="coin-chip">
+    <span class="coin-chip-icon"><span class="coin-svg-lg"><svg width="22" height="22" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block;flex-shrink:0"><defs><radialGradient id="rHDR" cx="38%" cy="32%" r="68%"><stop offset="0%" stop-color="#FFF5B0"/><stop offset="40%" stop-color="#FFD234"/><stop offset="75%" stop-color="#FF8C00"/><stop offset="100%" stop-color="#B84400"/></radialGradient><filter id="gHDR"><feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#8B3A00" flood-opacity="0.55"/></filter></defs><circle cx="22" cy="24" r="18" fill="#7A2800" opacity="0.5"/><circle cx="22" cy="22" r="20" fill="url(#rHDR)" filter="url(#gHDR)"/><circle cx="22" cy="22" r="18.5" fill="none" stroke="rgba(255,245,150,0.5)" stroke-width="1"/><ellipse cx="15" cy="14" rx="7" ry="4" fill="white" opacity="0.22" transform="rotate(-30 15 14)"/><text x="22" y="29" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="13" fill="#5C1A00" letter-spacing="0.5">CR</text></svg></span></span>
+    <div>
+      <span id="coinDisplay">0</span>
+      <div class="coin-usd" id="usdDisplay">≈ $0.00</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SCRATCH PAGE ═══ -->
+<div class="page active" id="page-scratch">
+  <!-- Balance Card -->
+  <div class="balance-card">
+    <div class="balance-card-left">
+      <div class="bc-label">Total Balance</div>
+      <div class="bc-coins"><svg width="38" height="38" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;flex-shrink:0"><defs><radialGradient id="rBCN" cx="38%" cy="32%" r="68%"><stop offset="0%" stop-color="#FFF5B0"/><stop offset="40%" stop-color="#FFD234"/><stop offset="75%" stop-color="#FF8C00"/><stop offset="100%" stop-color="#B84400"/></radialGradient><filter id="gBCN"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#8B3A00" flood-opacity="0.55"/></filter></defs><circle cx="22" cy="24" r="18" fill="#7A2800" opacity="0.5"/><circle cx="22" cy="22" r="20" fill="url(#rBCN)" filter="url(#gBCN)"/><circle cx="22" cy="22" r="18.5" fill="none" stroke="rgba(255,245,150,0.5)" stroke-width="1"/><ellipse cx="15" cy="14" rx="7" ry="4" fill="white" opacity="0.25" transform="rotate(-30 15 14)"/><text x="22" y="29" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="13" fill="#5C1A00" letter-spacing="0.5">CR</text></svg> <span id="balanceCoins">0</span></div>
+      <div class="bc-usd" id="balanceUsd">≈ $0.0000 USD</div>
+    </div>
+    <div class="balance-card-right">🏆</div>
+  </div>
+
+  <p class="section-title"><span class="st-icon st-scratch"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="var(--purple)"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20"/><path d="M6 14h3"/><path d="M13 14h5"/><path d="M19 2l1.5 1.5M21 5h1M19 8l1.5-1.5"/><path d="M5 2L3.5 3.5M3 5H2M5 8L3.5 6.5"/></svg></span>Daily Scratch Cards</p>
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-val" id="scratchCount">0</div><div class="stat-label">Scratched Today</div></div>
+    <div class="stat-card"><div class="stat-val" id="scratchLeft">5</div><div class="stat-label">Cards Left</div></div>
+    <div class="stat-card"><div class="stat-val" id="scratchEarned">0</div><div class="stat-label"><svg width="26" height="26" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block"><defs><radialGradient id="rSCR" cx="38%" cy="32%" r="68%"><stop offset="0%" stop-color="#FFF5B0"/><stop offset="40%" stop-color="#FFD234"/><stop offset="75%" stop-color="#FF8C00"/><stop offset="100%" stop-color="#B84400"/></radialGradient><filter id="gSCR"><feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#8B3A00" flood-opacity="0.55"/></filter></defs><circle cx="22" cy="24" r="18" fill="#7A2800" opacity="0.5"/><circle cx="22" cy="22" r="20" fill="url(#rSCR)" filter="url(#gSCR)"/><circle cx="22" cy="22" r="18.5" fill="none" stroke="rgba(255,245,150,0.5)" stroke-width="1"/><ellipse cx="15" cy="14" rx="7" ry="4" fill="white" opacity="0.22" transform="rotate(-30 15 14)"/><text x="22" y="29" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="13" fill="#5C1A00" letter-spacing="0.5">CR</text></svg> Earned</div></div>
+  </div>
+  <div class="scratch-area">
+    <div id="scratchWrap">
+      <div class="scratch-reward" id="rewardLayer">
+        <div class="reward-emoji" id="rewardEmoji">🎁</div>
+        <div class="reward-amount" id="rewardAmt">????</div>
+        <div class="reward-unit"><span class="coin-svg-sm"><svg width="22" height="22" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block;flex-shrink:0"><defs><radialGradient id="rRSCU" cx="38%" cy="32%" r="68%"><stop offset="0%" stop-color="#FFF5B0"/><stop offset="40%" stop-color="#FFD234"/><stop offset="75%" stop-color="#FF8C00"/><stop offset="100%" stop-color="#B84400"/></radialGradient><filter id="gRSCU"><feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#8B3A00" flood-opacity="0.55"/></filter></defs><circle cx="22" cy="24" r="18" fill="#7A2800" opacity="0.5"/><circle cx="22" cy="22" r="20" fill="url(#rRSCU)" filter="url(#gRSCU)"/><circle cx="22" cy="22" r="18.5" fill="none" stroke="rgba(255,245,150,0.5)" stroke-width="1"/><ellipse cx="15" cy="14" rx="7" ry="4" fill="white" opacity="0.22" transform="rotate(-30 15 14)"/><text x="22" y="29" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="13" fill="#5C1A00" letter-spacing="0.5">CR</text></svg></span> COINS</div>
+      </div>
+      <canvas id="scratchCanvas"></canvas>
+    </div>
+    <div class="scratch-info">Scratch here → <b id="scratchPct">0%</b> revealed → collect reward!</div>
+    <button class="btn btn-gold" id="collectBtn" disabled onclick="collectReward()">🎁 COLLECT COINS</button>
+    <div class="cooldown-wrap" id="cooldownWrap" style="display:none"><div class="cooldown-bar" id="cooldownBar" style="width:100%"></div></div>
+    <div class="cooldown-txt" id="cooldownTxt"></div>
+  </div>
+  <button class="btn btn-cyan" onclick="newScratchCard()">🔄 NEW SCRATCH CARD</button>
+  <div class="info-box">💡 <strong>5 Free Scratch Cards Daily!</strong> Scratch 50% to reveal. 10,000 Coins = $1 USDT.</div>
+</div>
+
+<!-- ═══ CAPTCHA PAGE ═══ -->
+<div class="page" id="page-captcha">
+  <p class="section-title"><span class="st-icon st-captcha"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="var(--blue)"><ellipse cx="12" cy="9" rx="9" ry="5.5"/><circle cx="12" cy="9" r="2.5"/><rect x="3" y="17" width="4" height="4" rx="1"/><rect x="10" y="17" width="4" height="4" rx="1"/><rect x="17" y="17" width="4" height="4" rx="1"/></svg></span>Image Captcha — Solve &amp; Earn</p>
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-val" id="captchaCount">0</div><div class="stat-label">Solved Today</div></div>
+    <div class="stat-card"><div class="stat-val" id="captchaLeft">4</div><div class="stat-label">Left Today</div></div>
+    <div class="stat-card"><div class="stat-val" id="captchaEarned">0</div><div class="stat-label"><svg width="22" height="22" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block;flex-shrink:0"><defs><radialGradient id="rRCPT" cx="38%" cy="32%" r="68%"><stop offset="0%" stop-color="#FFF5B0"/><stop offset="40%" stop-color="#FFD234"/><stop offset="75%" stop-color="#FF8C00"/><stop offset="100%" stop-color="#B84400"/></radialGradient><filter id="gRCPT"><feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#8B3A00" flood-opacity="0.55"/></filter></defs><circle cx="22" cy="24" r="18" fill="#7A2800" opacity="0.5"/><circle cx="22" cy="22" r="20" fill="url(#rRCPT)" filter="url(#gRCPT)"/><circle cx="22" cy="22" r="18.5" fill="none" stroke="rgba(255,245,150,0.5)" stroke-width="1"/><ellipse cx="15" cy="14" rx="7" ry="4" fill="white" opacity="0.22" transform="rotate(-30 15 14)"/><text x="22" y="29" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="13" fill="#5C1A00" letter-spacing="0.5">CR</text></svg> Earned</div></div>
+  </div>
+  <div id="captchaContainer"></div>
+  <button class="btn btn-cyan" onclick="generateCaptcha()">⏭ SKIP / NEXT</button>
+  <div class="info-box" style="margin-top:2px">💡 <strong>Select the correct images</strong> and earn <strong>1 Coin</strong> for every captcha solved! (3/day · 3 min cooldown)</div>
+
+  <!-- ── WATCH ADS SECTION ── -->
+  <div class="captcha-card" style="margin-top:13px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="st-icon" style="background:rgba(255,107,53,0.12);box-shadow:0 0 8px rgba(255,107,53,0.25);flex-shrink:0;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5,3 19,12 5,21"/>
+          </svg>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:800;color:var(--text);line-height:1.2;">Watch Ads</div>
+          <div style="font-size:10px;color:var(--muted);font-weight:600;">+1 Coin per ad · 2 Ads/day</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <div class="badge-reward" style="background:rgba(255,107,53,0.09);border-color:rgba(255,107,53,0.25);color:#FF6B35;">
+          🎬 <span id="adsWatchedBadge">0</span>/2 Done
+        </div>
+        <div class="badge-reward">
+          🪙 <span id="adsEarnedBadge">0</span> Earned
+        </div>
+      </div>
+    </div>
+    <button class="btn" id="watchAdsBtn" onclick="watchAd()"
+      style="background:linear-gradient(135deg,#FF6B35,#FF9A00);color:#fff;
+             box-shadow:0 4px 18px rgba(255,107,53,0.35);margin-bottom:0;
+             display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5,3 19,12 5,21"/></svg>
+      WATCH AD &amp; EARN 1 COIN
+    </button>
+  </div>
+</div>
+
+<!-- ═══ EARN PAGE ═══ -->
+<div class="page" id="page-earn">
+  <p class="section-title"><span class="st-icon" style="background:rgba(0,200,115,0.12);box-shadow:0 0 8px rgba(0,200,115,0.25)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>Earn With Our Bots</p>
+
+  <div class="earn-slider-wrap">
+    <div class="earn-slider-track" id="earnSliderTrack">
+      <div class="earn-slide" style="background:linear-gradient(135deg,var(--purple),var(--blue))">
+        <div class="earn-slide-icon">🤖</div>
+        <div class="earn-slide-name">TelegramTask Bot</div>
+        <div class="earn-slide-desc">Complete tasks & earn coins daily</div>
+        <a class="btn-start-earn" href="https://t.me/telegarmtask_bot" target="_blank">🚀 Start Earning</a>
+      </div>
+      <div class="earn-slide" style="background:linear-gradient(135deg,var(--blue),#00C873)">
+        <div class="earn-slide-icon">🤖</div>
+        <div class="earn-slide-name">RewardCoins Bot</div>
+        <div class="earn-slide-desc">Earn coins & withdraw instantly</div>
+        <a class="btn-start-earn" href="https://t.me/RewardCoins_bot" target="_blank">🚀 Start Earning</a>
+      </div>
+      <div class="earn-slide" style="background:linear-gradient(135deg,var(--purple2),var(--purple))">
+        <div class="earn-slide-icon">🤖</div>
+        <div class="earn-slide-name">AdsGPT Pro Bot</div>
+        <div class="earn-slide-desc">Watch ads & boost your earnings</div>
+        <a class="btn-start-earn" href="https://t.me/Adsgptproapp_bot" target="_blank">🚀 Start Earning</a>
+      </div>
+    </div>
+    <div class="earn-dots" id="earnDots">
+      <span class="earn-dot active" onclick="showEarnSlide(0)"></span>
+      <span class="earn-dot" onclick="showEarnSlide(1)"></span>
+      <span class="earn-dot" onclick="showEarnSlide(2)"></span>
+    </div>
+  </div>
+
+  <p class="task-section-label" style="font-size:11px;font-weight:800;color:var(--purple);text-transform:uppercase;letter-spacing:1px;margin-bottom:9px">📌 Our Telegram Bots</p>
+
+  <div class="bot-card">
+    <div class="bot-left">
+      <div class="bot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="#29B6F6"/><path d="M5.5 11.5L17.5 7L14.5 17.5L11 14L8.5 16.5V13L15.5 8.5L9.5 12.5L5.5 11.5Z" fill="white"/></svg></div>
+      <div class="bot-info">
+        <div class="bot-name">TelegramTask Bot</div>
+        <div class="bot-handle">@telegarmtask_bot</div>
+      </div>
+    </div>
+    <a class="btn-start-earn-sm" href="https://t.me/telegarmtask_bot" target="_blank">🚀 START EARNING</a>
+  </div>
+
+  <div class="bot-card">
+    <div class="bot-left">
+      <div class="bot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="#29B6F6"/><path d="M5.5 11.5L17.5 7L14.5 17.5L11 14L8.5 16.5V13L15.5 8.5L9.5 12.5L5.5 11.5Z" fill="white"/></svg></div>
+      <div class="bot-info">
+        <div class="bot-name">RewardCoins Bot</div>
+        <div class="bot-handle">@RewardCoins_bot</div>
+      </div>
+    </div>
+    <a class="btn-start-earn-sm" href="https://t.me/RewardCoins_bot" target="_blank">🚀 START EARNING</a>
+  </div>
+
+  <div class="bot-card">
+    <div class="bot-left">
+      <div class="bot-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="#29B6F6"/><path d="M5.5 11.5L17.5 7L14.5 17.5L11 14L8.5 16.5V13L15.5 8.5L9.5 12.5L5.5 11.5Z" fill="white"/></svg></div>
+      <div class="bot-info">
+        <div class="bot-name">AdsGPT Pro Bot</div>
+        <div class="bot-handle">@Adsgptproapp_bot</div>
+      </div>
+    </div>
+    <a class="btn-start-earn-sm" href="https://t.me/Adsgptproapp_bot" target="_blank">🚀 START EARNING</a>
+  </div>
+
+  <div class="info-box" style="margin-top:10px">💡 <strong>Tap Start Earning</strong> to open the bot in Telegram and begin earning rewards instantly!</div>
+</div>
+
+<!-- ═══ WITHDRAW PAGE ═══ -->
+<div class="page" id="page-withdraw">
+  <p class="section-title">Coin → USDT Withdrawal</p>
+
+  <!-- Level Card -->
+  <div class="level-card" id="levelCard">
+    <div style="text-align:center;color:var(--text2);font-size:13px;font-weight:700;">Loading level...</div>
+  </div>
+
+  <div class="wd-card">
+    <div class="wd-balance">
+      <div style="font-size:11px;color:var(--text);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;font-weight:700;">Your Balance</div>
+      <div class="wd-bal-coins"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;flex-shrink:0"><defs><linearGradient id="rWD2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFD234"/><stop offset="45%" stop-color="#FF9000"/><stop offset="100%" stop-color="#B84400"/></linearGradient><radialGradient id="fWD2" cx="33%" cy="28%" r="72%"><stop offset="0%" stop-color="#FFF5B0"/><stop offset="40%" stop-color="#FFBE38"/><stop offset="100%" stop-color="#C85200"/></radialGradient><filter id="gWD2" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="20" cy="22.5" r="18" fill="#6B2000" opacity="0.65"/><circle cx="20" cy="20" r="19" fill="rgba(255,150,0,0.18)" filter="url(#gWD2)"/><circle cx="20" cy="20" r="18" fill="url(#rWD2)"/><circle cx="20" cy="20" r="15" fill="url(#fWD2)"/><circle cx="20" cy="20" r="13" fill="none" stroke="rgba(255,235,100,0.5)" stroke-width="0.8"/><ellipse cx="14" cy="12.5" rx="6.5" ry="3.5" fill="rgba(255,255,255,0.30)" transform="rotate(-32 14 12.5)"/><circle cx="11.5" cy="11" r="2.2" fill="rgba(255,255,255,0.18)"/><circle cx="28" cy="13" r="1" fill="rgba(255,255,200,0.50)"/><text x="20.5" y="26" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="800" font-size="14" fill="rgba(70,15,0,0.35)" letter-spacing="1">CR</text><text x="20" y="25.5" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="800" font-size="14" fill="rgba(80,18,0,0.92)" letter-spacing="1">CR</text></svg><span id="wdCoinDisplay">0</span></div>
+      <div class="wd-bal-usd" id="wdUsdDisplay">≈ $0.0000 USD</div>
+    </div>
+    <div style="text-align:center;margin-bottom:15px">
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px">
+        <svg width="28" height="28" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block;margin-right:6px">
+  <rect width="500" height="500" rx="80" fill="white"/>
+  <rect x="15" y="15" width="470" height="470" rx="70" fill="none" stroke="#0066FF" stroke-width="30"/>
+  <text x="250" y="340" text-anchor="middle" font-family="Arial Black,sans-serif" font-weight="900" font-size="240" fill="#0066FF">FP</text>
+</svg>
+        <span style="font-size:15px;font-weight:800;color:#0066FF;">FaucetPay</span>
+      </div>
+      <span class="wd-rate">💱 10,000 Coins = $1.00 USDT</span>
+    </div>
+    <div class="input-group">
+      <div class="input-label">FaucetPay Email</div>
+      <input class="input-field" id="wdAddress" placeholder="your@email.com" type="email">
+    </div>
+    <div class="input-group">
+      <div class="input-label">Coins to Withdraw</div>
+      <input class="input-field" id="wdCoins" placeholder="Minimum 10 coins..." type="number" step="100" oninput="updateWdCalc()">
+    </div>
+    <div style="background:#F5FCFF;border:1px solid var(--border);border-radius:9px;padding:10px 13px;margin-bottom:11px;font-size:12px;color:var(--text);font-weight:700;">
+      You will receive: <strong id="wdUsdtCalc" style="color:var(--green)">0.000000 USDT</strong>
+    </div>
+    <div class="wd-row">
+      <div class="min-badge">⚠ Min: 10 Coins</div>
+      <button class="max-btn" onclick="setMaxWd()">MAX ↑</button>
+    </div>
+    <button class="btn btn-green" onclick="processWithdraw()"><svg width="20" height="20" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block;margin-right:6px">
+  <rect width="500" height="500" rx="80" fill="white"/>
+  <rect x="15" y="15" width="470" height="470" rx="70" fill="none" stroke="#0066FF" stroke-width="30"/>
+  <text x="250" y="340" text-anchor="middle" font-family="Arial Black,sans-serif" font-weight="900" font-size="240" fill="#0066FF">FP</text>
+</svg> WITHDRAW VIA FAUCETPAY</button>
+  </div>
+  <div class="info-box">🔐 <strong>Instant Payments:</strong> Withdrawals are processed securely and instantly. Minimum withdrawal: <strong>10 Coins</strong>.</div>
+
+  <!-- Recent Withdrawals -->
+  <div style="margin-top:14px;">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+      <div class="st-icon" style="background:var(--green-bg);box-shadow:0 0 8px rgba(0,200,115,0.22);flex-shrink:0;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+      </div>
+      <span style="font-size:11px;font-weight:800;color:var(--text);text-transform:uppercase;letter-spacing:1.2px;">Recent Withdrawals</span>
+    </div>
+    <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:16px;
+      overflow:hidden;box-shadow:0 4px 18px rgba(124,58,237,0.07);">
+      <div id="recentWdList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ HISTORY PAGE ═══ -->
+
+
+
+<div class="page" id="page-history">
+  <p class="section-title">Activity History</p>
+  <div id="historyList">
+    <div style="text-align:center;padding:36px 20px;color:var(--text)">
+      <div style="font-size:36px;margin-bottom:10px">📊</div>
+      <div style="font-weight:700;">No activity yet.<br>Start with Scratch or Captcha!</div>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <button class="nav-btn active" onclick="switchTab('scratch')" id="nav-scratch">
+    <span class="nav-icon"><svg viewBox="0 0 24 24">
+      <rect x="2" y="5" width="20" height="14" rx="3"/>
+      <path d="M2 10h20"/>
+      <path d="M6 14h3"/>
+      <path d="M13 14h5"/>
+      <path d="M19 2l1.5 1.5M21 5h1M19 8l1.5-1.5"/>
+      <path d="M5 2L3.5 3.5M3 5H2M5 8L3.5 6.5"/>
+    </svg></span>Scratch
+  </button>
+  <button class="nav-btn" onclick="switchTab('captcha')" id="nav-captcha">
+    <span class="nav-icon"><svg viewBox="0 0 24 24">
+      <ellipse cx="12" cy="10" rx="9" ry="5.5"/>
+      <circle cx="12" cy="10" r="2.5"/>
+      <circle cx="12" cy="10" r="1"/>
+      <path d="M3 10c0 0 3-6 9-6s9 6 9 6"/>
+      <rect x="3" y="17" width="4" height="4" rx="1"/>
+      <rect x="10" y="17" width="4" height="4" rx="1"/>
+      <rect x="17" y="17" width="4" height="4" rx="1"/>
+    </svg></span>Captcha
+  </button>
+  <button class="nav-btn" onclick="switchTab('earn')" id="nav-earn">
+    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M13 2L4 14h6l-1 8 10-12h-6l1-8z"/></svg></span>Earn
+  </button>
+  <button class="nav-btn" onclick="switchTab('withdraw')" id="nav-withdraw">
+    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>Withdraw
+  </button>
+  <button class="nav-btn" onclick="switchTab('history')" id="nav-history">
+    <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 12h18"/><path d="M3 6h18"/><path d="M3 18h12"/><circle cx="19" cy="18" r="2"/><path d="M19 16v-4"/></svg></span>History
+  </button>
+</div>
+
+<!-- ═══════ CONFIRM WITHDRAW MODAL ═══════ -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box">
+    <div class="modal-handle"></div>
+    <div class="modal-icon" style="background:linear-gradient(135deg,rgba(124,58,237,0.10),rgba(0,200,115,0.08));border:1.5px solid var(--border)">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+      </svg>
+    </div>
+    <div class="modal-title">Confirm Withdrawal</div>
+    <div class="modal-sub">Please review your details before proceeding.</div>
+    <div class="modal-detail-row">
+      <span class="modal-detail-label">🪙 EarnZone Coins</span>
+      <span class="modal-detail-val" id="confirmCoins">0 Coins</span>
+    </div>
+    <div class="modal-detail-row">
+      <span class="modal-detail-label">💵 You Receive</span>
+      <span class="modal-detail-val" style="color:var(--green)" id="confirmUsdt">0.000000 USDT</span>
+    </div>
+    <div class="modal-detail-row">
+      <span class="modal-detail-label">📧 FaucetPay Email</span>
+      <span class="modal-detail-val" id="confirmEmail" style="font-size:11px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">—</span>
+    </div>
+    <div class="modal-detail-row">
+      <span class="modal-detail-label">⚡ Processing</span>
+      <span class="modal-detail-val" style="color:var(--purple)">Instant Payment</span>
+    </div>
+    <div class="modal-btns">
+      <button class="btn" onclick="closeModal('confirmModal')"
+        style="background:transparent;border:1.5px solid var(--border);color:var(--muted);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;">
+        ✕ Cancel
+      </button>
+      <button class="btn" id="confirmOkBtn" onclick="doWithdraw()"
+        style="background:linear-gradient(135deg,var(--green),#00E88A);color:#fff;
+        box-shadow:0 4px 18px rgba(0,200,115,0.30);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;">
+        ✔ Confirm &amp; Send
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SUCCESS MODAL ═══════ -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal-box">
+    <div class="modal-handle"></div>
+    <div class="modal-icon" style="background:var(--green-bg);border:1.5px solid rgba(0,200,115,0.28)">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+    </div>
+    <div class="modal-title" style="color:var(--green)">Payment Successful! 🎉</div>
+    <div class="modal-sub">Your USDT has been sent to your FaucetPay account instantly.</div>
+    <div class="modal-detail-row">
+      <span class="modal-detail-label">💵 Amount Sent</span>
+      <span class="modal-detail-val" style="color:var(--green)" id="successUsdt">0.000000 USDT</span>
+    </div>
+    <div class="modal-detail-row">
+      <span class="modal-detail-label">📧 Sent To</span>
+      <span class="modal-detail-val" id="successEmail" style="font-size:11px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">—</span>
+    </div>
+    <div class="modal-detail-row">
+      <span class="modal-detail-label">📊 Status</span>
+      <span class="modal-detail-val" style="color:var(--green)">✅ Completed</span>
+    </div>
+    <div style="margin-top:18px">
+      <button class="btn" onclick="closeModal('successModal');switchTab('home')"
+        style="background:linear-gradient(135deg,var(--purple),var(--purple2));color:#fff;
+        box-shadow:0 4px 18px rgba(124,58,237,0.30);font-family:'Space Grotesk',sans-serif;
+        font-size:13px;font-weight:700;margin-bottom:0;">
+        🏠 Back to Home
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CFG = {
+  WITHDRAW_API_URL: 'https://claim-rewards-one.vercel.app/api/withdraw',
+  COINS_PER_DOLLAR: 10000,       // 10000 coins = $1
+  MIN_WITHDRAW_COINS: 10,        // min 10 coins to withdraw
+  SCRATCH_PER_DAY: 5,
+  SCRATCH_COOLDOWN: 120,         // 2 minutes
+  // Scratch rewards in COINS
+  SCRATCH_REWARDS: [1],
+  SCRATCH_WEIGHTS: [1],
+  // Captcha reward in COINS — flat 1 coin, no streak bonus
+  CAPTCHA_REWARD: 1,
+  CAPTCHA_PER_DAY: 3,
+  CAPTCHA_COOLDOWN: 180,         // 3 minutes between captchas
+  // Watch Ads
+  ADS_PER_DAY: 2,
+  ADS_REWARD: 1,                 // 1 coin per ad
+  // Level System — based on totalEarned coins
+  LEVELS: [
+    { name: 'Beginner',   min: 0,   max: 99,   dailyWithdraw: 10,    color: '#8B7BAE', icon: '🥉' },
+    { name: 'Pro',        min: 100, max: 199,   dailyWithdraw: 20,    color: '#FF9000', icon: '🥈' },
+    { name: 'Elite',      min: 200, max: Infinity, dailyWithdraw: 50, color: '#7C3AED', icon: '🥇' },
+  ],
+};
+
+// ══ IMAGE SETS — 8 categories, 9 emojis each ══
+const IMG = {
+  '🚗 Cars':    ['🚗','🚕','🚙','🏎','🚓','🚐','🚌','🚑','🚒'],
+  '🐶 Animals': ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨'],
+  '🍎 Fruits':  ['🍎','🍊','🍋','🍇','🍓','🍑','🥭','🍒','🍍'],
+  '🍕 Food':    ['🍕','🍔','🍟','🌮','🍜','🍣','🍩','🍦','🧁'],
+  '⚽ Sports':  ['⚽','🏀','🏈','⚾','🎾','🏐','🏉','🎱','🏓'],
+  '✈️ Travel':  ['✈️','🚀','🚢','🚂','🚁','🛸','🛥️','🚤','⛵'],
+  '🌸 Nature':  ['🌸','🌺','🌻','🌹','🌷','🌼','🌿','🍀','🌴'],
+  '💎 Gems':    ['💎','💍','🔮','🪩','✨','⭐','🌟','💫','🔯'],
+};
+
+// ══ STATE ══
+let S = {
+  coins: 0,
+  scratchCount: 0, scratchEarned: 0,
+  captchaCount: 0, captchaStreak: 0, captchaEarned: 0, captchaDate: '', lastCaptchaTime: 0,
+  watchAdsCount: 0, watchAdsEarned: 0, watchAdsDate: '',
+  withdrawHistory: [],
+  history: [],
+  currentReward: 0,
+  scratchRevealed: false, scratchCollected: false,
+  lastScratchTime: 0,
+  totalEarned: 0,
+  withdrawnToday: 0,
+  withdrawnDate: '',
+};
+
+let tg = window.Telegram?.WebApp;
+if (tg) { tg.ready(); tg.expand(); }
+
+loadState();
+
+// ══ PERSIST ══
+function saveState() {
+  try { localStorage.setItem('ez3', JSON.stringify(S)); } catch(e){}
+}
+function loadState() {
+  try {
+    const raw = localStorage.getItem('ez3');
+    if (!raw) return;
+    Object.assign(S, JSON.parse(raw));
+    if (new Date(S.lastScratchTime||0).toDateString() !== new Date().toDateString()) S.scratchCount = 0;
+  } catch(e){}
+}
+
+// ══ HELPERS ══
+function fmtCoins(n) { return Math.floor(n||0).toLocaleString(); }
+function coinsToUsd(c) { return (c / CFG.COINS_PER_DOLLAR).toFixed(4); }
+function coinsToUsdt(c) { return (c / CFG.COINS_PER_DOLLAR).toFixed(6); }
+
+// ══ LEVEL SYSTEM ══
+function getLevel() {
+  const earned = S.totalEarned || 0;
+  for (let i = CFG.LEVELS.length - 1; i >= 0; i--) {
+    if (earned >= CFG.LEVELS[i].min) return { ...CFG.LEVELS[i], idx: i, earned };
+  }
+  return { ...CFG.LEVELS[0], idx: 0, earned };
+}
+
+function getDailyWithdrawLimit() {
+  return getLevel().dailyWithdraw;
+}
+
+function getWithdrawnToday() {
+  S.withdrawnDate = S.withdrawnDate || '';
+  S.withdrawnToday = S.withdrawnToday || 0;
+  if (S.withdrawnDate !== todayStr()) { S.withdrawnToday = 0; S.withdrawnDate = todayStr(); }
+  return S.withdrawnToday;
+}
+
+function getRemainingWithdraw() {
+  return Math.max(0, getDailyWithdrawLimit() - getWithdrawnToday());
+}
+
+function updateLevelUI() {
+  const lv = getLevel();
+  const earned = lv.earned;
+  const nextLv = CFG.LEVELS[lv.idx + 1];
+  const pct = nextLv ? Math.min(100, Math.round(((earned - lv.min) / (nextLv.min - lv.min)) * 100)) : 100;
+  const remaining = getRemainingWithdraw();
+
+  // Gradient per level
+  const gradients = [
+    'linear-gradient(135deg,#8B5CF6,#6D28D9)',
+    'linear-gradient(135deg,#F59E0B,#D97706)',
+    'linear-gradient(135deg,#7C3AED,#1E7FFF)',
+  ];
+  const grad = gradients[lv.idx] || gradients[0];
+
+  const el = document.getElementById('levelCard');
+  if (!el) return;
+  el.style.background = grad;
+
+  // Build level steps row
+  const stepsHtml = CFG.LEVELS.map((l,i) => `
+    <div class="lv-step ${i === lv.idx ? 'active' : ''}">
+      <div class="lv-step-icon">${l.icon}</div>
+      <div class="lv-step-name">${l.name}</div>
+      <div class="lv-step-limit">${l.dailyWithdraw}/day</div>
+    </div>`).join('');
+
+  el.innerHTML = `
+    <div class="lv-header">
+      <div class="lv-left">
+        <div class="lv-icon-wrap">${lv.icon}</div>
+        <div>
+          <div class="lv-name">${lv.name} <span class="lv-badge">Level ${lv.idx+1}</span></div>
+          <div class="lv-earned">${fmtCoins(earned)} total coins earned</div>
+        </div>
+      </div>
+      <div class="lv-right">
+        <div class="lv-wd-box">
+          <div class="lv-wd-num">${remaining}</div>
+          <div class="lv-wd-label">coins left<br>today</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lv-bar-section">
+      <div class="lv-bar-top">
+        <span>${fmtCoins(earned - lv.min)} / ${nextLv ? fmtCoins(nextLv.min - lv.min) : '∞'} earned</span>
+        <span>${pct}%${nextLv ? ' to ' + nextLv.icon + ' ' + nextLv.name : ' MAX'}</span>
+      </div>
+      <div class="lv-bar-wrap">
+        <div class="lv-bar" style="width:${pct}%"></div>
+      </div>
+    </div>
+
+    <div class="lv-levels-row">${stepsHtml}</div>
+
+    <div class="lv-footer">
+      <div class="lv-footer-left">📅 Daily withdraw limit</div>
+      <div class="lv-footer-right">💳 ${lv.dailyWithdraw} Coins / Day</div>
+    </div>
+  `;
+}
+
+function updateUI() {
+  { const _el=document.getElementById('coinDisplay'); if(_el) _el.textContent=fmtCoins(S.coins); }
+  { const _el=document.getElementById('usdDisplay'); if(_el) _el.textContent='≈ $' + coinsToUsd(S.coins); }
+  const wdc=document.getElementById('wdCoinDisplay'); if(wdc) wdc.textContent=fmtCoins(S.coins);
+  const wdu=document.getElementById('wdUsdDisplay'); if(wdu) wdu.textContent='≈ $'+coinsToUsd(S.coins)+' USD';
+  const bc=document.getElementById('balanceCoins'); if(bc) bc.textContent=fmtCoins(S.coins);
+  const bu=document.getElementById('balanceUsd'); if(bu) bu.textContent='≈ $'+coinsToUsd(S.coins)+' USD';
+  { const _el=document.getElementById('scratchCount'); if(_el) _el.textContent=S.scratchCount; }
+  { const _el=document.getElementById('scratchLeft'); if(_el) _el.textContent=Math.max(0, CFG.SCRATCH_PER_DAY - S.scratchCount); }
+  { const _el=document.getElementById('scratchEarned'); if(_el) _el.textContent=fmtCoins(S.scratchEarned); }
+  if (S.captchaDate !== todayStr()) S.captchaCount = 0;
+  { const _el=document.getElementById('captchaCount'); if(_el) _el.textContent=S.captchaCount; }
+  const captchaLeftEl = document.getElementById('captchaLeft');
+  if (captchaLeftEl) captchaLeftEl.textContent = Math.max(0, CFG.CAPTCHA_PER_DAY - S.captchaCount);
+  { const _el=document.getElementById('captchaStreak'); if(_el) _el.textContent=S.captchaStreak; }
+  { const _el=document.getElementById('captchaEarned'); if(_el) _el.textContent=fmtCoins(S.captchaEarned); }
+  renderHistory();
+  updateLevelUI();
+}
+
+function showToast(msg, type='info') {
+  const t = document.getElementById('toast');
+  t.innerHTML = msg;
+  t.className = 'toast ' + type + ' show';
+  clearTimeout(t._t);
+  t._t = setTimeout(()=> t.classList.remove('show'), 2800);
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const pg=document.getElementById('page-'+tab); if(pg) pg.classList.add('active');
+  const nb=document.getElementById('nav-'+tab); if(nb) nb.classList.add('active');
+  if (tab==='scratch' && !S.scratchCollected) setTimeout(resizeScratch, 60);
+  if (tab==='captcha') setTimeout(generateCaptcha, 60);
+  if (tab==='withdraw') setTimeout(updateLevelUI, 60);
+}
+
+function confetti(x) {
+  const colors=['#FFD700','#00E5FF','#00FF88','#FF4757','#FF6B35','#A855F7','#F7B731'];
+  for (let i=0;i<32;i++){
+    const el=document.createElement('div');
+    el.className='cp';
+    el.style.cssText=`left:${8+Math.random()*84}vw;top:50px;background:${colors[Math.random()*colors.length|0]};animation-delay:${Math.random()*0.5}s;animation-duration:${1.2+Math.random()*0.8}s`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),2400);
+  }
+}
+
+// ══ SCRATCH CARD ══
+// ══ SCRATCH CARD ══
+let sCtx=null, sDrawing=false;
+
+function weightedRandom(vals, weights){
+  const tot=weights.reduce((a,b)=>a+b,0);
+  let r=Math.random()*tot;
+  for(let i=0;i<vals.length;i++){r-=weights[i];if(r<=0)return vals[i];}
+  return vals[0];
+}
+
+function initScratch(){
+  const wrap=document.getElementById('scratchWrap');
+  const cv=document.getElementById('scratchCanvas');
+  if(!wrap||!cv) return;
+  const W=wrap.clientWidth||wrap.offsetWidth||300;
+  const H=wrap.clientHeight||158;
+  cv.width=W; cv.height=H;
+  sCtx=cv.getContext('2d');
+
+  S.currentReward=weightedRandom(CFG.SCRATCH_REWARDS, CFG.SCRATCH_WEIGHTS);
+  S.scratchRevealed=false; S.scratchCollected=false;
+
+  const g=sCtx.createLinearGradient(0,0,W,H);
+  g.addColorStop(0,'#5B21B6'); g.addColorStop(.5,'#7C3AED'); g.addColorStop(1,'#1E7FFF');
+  sCtx.fillStyle=g; sCtx.fillRect(0,0,W,H);
+  sCtx.fillStyle='rgba(255,255,255,0.08)';
+  for(let x=0;x<W;x+=16) for(let y=0;y<H;y+=16) sCtx.fillRect(x,y,8,8);
+  sCtx.font='14px serif';
+  for(let i=0;i<12;i++) sCtx.fillText('🪙',Math.random()*(W-20)+5,Math.random()*(H-10)+14);
+  sCtx.fillStyle='rgba(255,255,255,0.90)';
+  sCtx.font='bold 16px Plus Jakarta Sans,sans-serif';
+  sCtx.textAlign='center';
+  sCtx.fillText('👆 SCRATCH HERE TO WIN', W/2, H/2-6);
+  sCtx.font='12px Plus Jakarta Sans,sans-serif';
+  sCtx.fillStyle='rgba(255,255,255,0.65)';
+  sCtx.fillText('Coins are hidden inside!', W/2, H/2+14);
+
+  document.getElementById('collectBtn').disabled=true;
+  { const _el=document.getElementById('scratchPct'); if(_el) _el.textContent='0%'; }
+  { const _el=document.getElementById('rewardAmt'); if(_el) _el.textContent='????'; }
+  { const _el=document.getElementById('rewardEmoji'); if(_el) _el.textContent='🎁'; }
+
+  cv.onmousedown=e=>{sDrawing=true;e.preventDefault();scratchAt(e);};
+  cv.onmousemove=e=>{if(sDrawing)scratchAt(e);};
+  cv.onmouseup=()=>sDrawing=false;
+  cv.onmouseleave=()=>sDrawing=false;
+  cv.ontouchstart=e=>{sDrawing=true;e.preventDefault();scratchAtT(e);};
+  cv.ontouchmove=e=>{e.preventDefault();if(sDrawing)scratchAtT(e);};
+  cv.ontouchend=()=>sDrawing=false;
+}
+
+function resizeScratch(){
+  if(S.scratchCollected) return;
+  const wrap=document.getElementById('scratchWrap');
+  const cv=document.getElementById('scratchCanvas');
+  if(wrap && cv && wrap.clientWidth && wrap.clientWidth!==cv.width) initScratch();
+}
+
+function scratchAt(e){
+  const cv=document.getElementById('scratchCanvas');
+  if(!cv) return;
+  const r=cv.getBoundingClientRect();
+  doScratch(e.clientX-r.left, e.clientY-r.top);
+}
+function scratchAtT(e){
+  const cv=document.getElementById('scratchCanvas');
+  if(!cv) return;
+  const r=cv.getBoundingClientRect();
+  doScratch(e.touches[0].clientX-r.left, e.touches[0].clientY-r.top);
+}
+function doScratch(x,y){
+  const cv2=document.getElementById('scratchCanvas');
+  if(!sCtx||!cv2||S.scratchCollected) return;
+  sCtx.globalCompositeOperation='destination-out';
+  sCtx.beginPath(); sCtx.arc(x,y,26,0,Math.PI*2); sCtx.fill();
+  checkScratchPct();
+}
+function checkScratchPct(){
+  const cv=document.getElementById('scratchCanvas');
+  if(!cv||!sCtx) return;
+  const W=cv.width,H=cv.height,step=18;
+  const data=sCtx.getImageData(0,0,W,H).data;
+  let tr=0,tot=0;
+  for(let x=0;x<W;x+=step) for(let y=0;y<H;y+=step){tot++;if(data[(y*W+x)*4+3]<100)tr++;}
+  const pct=Math.min(100,Math.round(tr/tot*100));
+  { const _el=document.getElementById('scratchPct'); if(_el) _el.textContent=pct+'%'; }
+  if(pct>=50&&!S.scratchRevealed){
+    S.scratchRevealed=true;
+    { const _el=document.getElementById('rewardAmt'); if(_el) _el.textContent=fmtCoins(S.currentReward); }
+    { const _el=document.getElementById('rewardEmoji'); if(_el) _el.textContent=S.currentReward>=1000?'🤑':S.currentReward>=500?'💰':'🎉'; }
+    document.getElementById('collectBtn').disabled=false;
+    showToast('🎉 Coins revealed! Tap to collect!','gold');
+  }
+}
+
+function newScratchCard(){
+  if(S.scratchCount>=CFG.SCRATCH_PER_DAY){showToast('❌ All cards used today! Come back tomorrow.','error');return;}
+  const elapsed=(Date.now()-S.lastScratchTime)/1000;
+  if(S.lastScratchTime>0&&elapsed<CFG.SCRATCH_COOLDOWN){
+    const left=Math.ceil(CFG.SCRATCH_COOLDOWN-elapsed);
+    showToast('⏳ Next card in '+left+'s!','info');
+    startCooldown(left); return;
+  }
+  setTimeout(initScratch,30);
+  showToast('🃏 New scratch card ready!','info');
+}
+
+function collectReward(){
+  if(S.scratchCollected||!S.scratchRevealed) return;
+  S.scratchCollected=true;
+  S.coins+=S.currentReward; S.scratchEarned+=S.currentReward; S.totalEarned=(S.totalEarned||0)+S.currentReward;
+  S.scratchCount++; S.lastScratchTime=Date.now();
+  addHistory('scratch',S.currentReward,'🃏 Scratch Card');
+  document.getElementById('collectBtn').disabled=true;
+  confetti();
+  showToast('<svg width="16" height="16" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block;margin-right:3px"><defs><linearGradient id="rT" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFD234"/><stop offset="45%" stop-color="#FF9000"/><stop offset="100%" stop-color="#B84400"/></linearGradient><radialGradient id="fT" cx="33%" cy="28%" r="72%"><stop offset="0%" stop-color="#FFF5B0"/><stop offset="40%" stop-color="#FFBE38"/><stop offset="100%" stop-color="#C85200"/></radialGradient></defs><circle cx="20" cy="22.5" r="18" fill="#6B2000" opacity="0.65"/><circle cx="20" cy="20" r="18" fill="url(#rT)"/><circle cx="20" cy="20" r="15" fill="url(#fT)"/><ellipse cx="14" cy="12.5" rx="6.5" ry="3.5" fill="rgba(255,255,255,0.30)" transform="rotate(-32 14 12.5)"/><text x="20" y="25.5" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="800" font-size="14" fill="rgba(80,18,0,0.92)" letter-spacing="1">CR</text></svg>+'+fmtCoins(S.currentReward)+' Coins Earned!','success');
+  saveState(); updateUI();
+  startCooldown(CFG.SCRATCH_COOLDOWN);
+}
+
+let cdT=null;
+function startCooldown(sec){
+  const total=CFG.SCRATCH_COOLDOWN;
+  const wrap=document.getElementById('cooldownWrap');
+  const bar=document.getElementById('cooldownBar');
+  const txt=document.getElementById('cooldownTxt');
+  wrap.style.display='block'; if(cdT)clearInterval(cdT);
+  let left=sec;
+  bar.style.width=(left/total*100)+'%';
+  txt.textContent='⏳ Next card in: '+left+'s';
+  cdT=setInterval(()=>{
+    left--;
+    bar.style.width=Math.max(0,left/total*100)+'%';
+    txt.textContent='⏳ Next card in: '+left+'s';
+    if(left<=0){
+      clearInterval(cdT);
+      wrap.style.display='none';
+      txt.textContent='';
+      if(S.scratchCount<CFG.SCRATCH_PER_DAY){
+        initScratch();
+        showToast('🃏 New scratch card ready — go for it!','gold');
+      } else {
+        showToast('❌ All cards used today! Come back tomorrow.','error');
+      }
+    }
+  },1000);
+}
+
+// ══ CAPTCHA — IMAGE ONLY ══
+// 10 different categories with 9 emoji each
+const CAPTCHA_SETS = {
+  'Cars 🚗':     ['🚗','🚕','🚙','🏎','🚓','🚐','🚌','🚑','🚒'],
+  'Animals 🐶':  ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨'],
+  'Fruits 🍎':   ['🍎','🍊','🍋','🍇','🍓','🍑','🥭','🍒','🍍'],
+  'Food 🍕':     ['🍕','🍔','🍟','🌮','🍜','🍣','🍩','🍦','🧁'],
+  'Sports ⚽':   ['⚽','🏀','🏈','⚾','🎾','🏐','🏉','🎱','🏓'],
+  'Travel ✈️':   ['✈️','🚀','🚢','🚂','🚁','🛸','🛥️','🚤','⛵'],
+  'Flowers 🌸':  ['🌸','🌺','🌻','🌹','🌷','🌼','💐','🌿','🍀'],
+  'Gems 💎':     ['💎','💍','🔮','🪩','✨','⭐','🌟','💫','🔯'],
+  'Bugs 🦋':     ['🦋','🐝','🐛','🦗','🕷','🐞','🦟','🪲','🐜'],
+  'Music 🎵':    ['🎵','🎸','🎹','🎺','🎻','🥁','🪕','🎷','🪗'],
+};
+
+let captchaActive = false;
+
+function generateCaptcha(){
+  captchaActive = false;
+
+  // Daily limit check
+  if (S.captchaDate !== todayStr()) { S.captchaCount = 0; S.captchaDate = todayStr(); }
+  if (S.captchaCount >= CFG.CAPTCHA_PER_DAY) {
+    document.getElementById('captchaContainer').innerHTML = `
+      <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:18px;
+        padding:28px 20px;text-align:center;box-shadow:0 4px 20px rgba(30,127,255,0.08);margin-bottom:13px;">
+        <div style="font-size:36px;margin-bottom:10px">🚫</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px;">Daily Limit Reached!</div>
+        <div style="font-size:12px;color:var(--muted);font-weight:600;">You have solved 3 captchas today.<br>Come back tomorrow for more coins!</div>
+      </div>`;
+    return;
+  }
+
+  // Cooldown check
+  const cdLeft = captchaCooldownLeft();
+  if(cdLeft > 0){ startCaptchaCooldown(); return; }
+  const keys=Object.keys(CAPTCHA_SETS);
+  const catKey=keys[Math.floor(Math.random()*keys.length)];
+  const pool=CAPTCHA_SETS[catKey];
+
+  // Pick 1 target emoji
+  const targetIdx=Math.floor(Math.random()*pool.length);
+  const target=pool[targetIdx];
+  // How many of target to place (2–4)
+  const targetCount=2+Math.floor(Math.random()*3);
+
+  // Build 9 tiles
+  const otherPool=Object.values(CAPTCHA_SETS).flat().filter(e=>e!==target);
+  let tiles=[];
+  for(let i=0;i<targetCount;i++) tiles.push({e:target,ok:true});
+  while(tiles.length<9){
+    const e=otherPool[Math.floor(Math.random()*otherPool.length)];
+    tiles.push({e,ok:false});
+  }
+  tiles.sort(()=>Math.random()-0.5);
+
+  // Daily captcha reset
+  if (S.captchaDate !== todayStr()) { S.captchaCount = 0; S.captchaDate = todayStr(); }
+  const reward=CFG.CAPTCHA_REWARD; // flat 1 coin
+  const total=reward;
+
+  document.getElementById('captchaContainer').innerHTML=`
+  <div class="captcha-card">
+    <div class="captcha-header">
+      <div class="badge-type">🖼️ Image Captcha</div>
+      <div class="badge-reward"><svg width="18" height="18" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;flex-shrink:0"><defs><linearGradient id="rCaptcha" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFD234"/><stop offset="50%" stop-color="#FF8C00"/><stop offset="100%" stop-color="#C45000"/></linearGradient><radialGradient id="fCaptcha" cx="35%" cy="30%" r="70%"><stop offset="0%" stop-color="#FFF0A0"/><stop offset="45%" stop-color="#FFB830"/><stop offset="100%" stop-color="#CC5500"/></radialGradient></defs><circle cx="20" cy="22" r="18" fill="#7A2800" opacity="0.55"/><circle cx="20" cy="20" r="18" fill="url(#rCaptcha)"/><circle cx="20" cy="20" r="15" fill="url(#fCaptcha)"/><circle cx="20" cy="20" r="12.5" fill="none" stroke="rgba(255,240,120,0.4)" stroke-width="1"/><ellipse cx="15" cy="13" rx="5.5" ry="3" fill="rgba(255,255,255,0.28)" transform="rotate(-30 15 13)"/><text x="20" y="25" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="800" font-size="13" fill="rgba(90,25,0,0.90)" letter-spacing="0.5">CR</text></svg> +${fmtCoins(total)} Coin</div>
+    </div>
+    <div class="captcha-instruction">
+      <span class="target-emoji">${target}</span>
+      Select all <strong style="color:var(--cyan)">${target}</strong> emojis
+      <span class="sub">(${targetCount} images match)</span>
+    </div>
+    <div class="img-grid">
+      ${tiles.map((t,i)=>`<div class="img-tile" data-ok="${t.ok}" onclick="toggleTile(this)">${t.e}</div>`).join('')}
+    </div>
+    <button class="btn btn-gold" onclick="checkImageCaptcha(${total})">✅ SUBMIT</button>
+  </div>`;
+
+  captchaActive = true;
+}
+
+function toggleTile(el){
+  if(!captchaActive) return;
+  el.classList.toggle('selected');
+}
+
+function checkImageCaptcha(reward){
+  if(!captchaActive) return;
+  captchaActive=false;
+  const tiles=[...document.querySelectorAll('.img-tile')];
+  let allCorrect=true;
+  tiles.forEach(t=>{
+    const isOk=t.dataset.ok==='true';
+    const isSel=t.classList.contains('selected');
+    if(isOk!==isSel) allCorrect=false;
+  });
+
+  // Show reveal animation
+  tiles.forEach(t=>{
+    const isOk=t.dataset.ok==='true';
+    if(isOk) t.classList.add('correct-reveal');
+    else if(t.classList.contains('selected')) t.classList.add('wrong-reveal');
+  });
+  // Disable submit
+  const btn=document.querySelector('.captcha-card .btn-gold');
+  if(btn) btn.disabled=true;
+
+  setTimeout(()=>{
+    if(allCorrect) captchaWin(reward);
+    else captchaLose();
+  }, 500);
+}
+
+function captchaWin(reward){
+  // Daily reset
+  if (S.captchaDate !== todayStr()) { S.captchaCount = 0; S.captchaDate = todayStr(); }
+  if (S.captchaCount >= CFG.CAPTCHA_PER_DAY) {
+    showToast('❌ Daily limit reached! Come back tomorrow.', 'error');
+    setTimeout(generateCaptcha, 1200);
+    return;
+  }
+
+  // Show Monetag rewarded interstitial — reward only after full ad watch
+  const runAd = typeof window['show_11196258'] === 'function';
+  if (runAd) {
+    showToast('⏳ Loading ad... Watch to earn!', 'info');
+    window['show_11196258']()
+      .then(() => { grantCaptchaReward(reward); })
+      .catch(() => {
+        showToast('❌ Watch the full ad to earn coins!', 'error');
+        setTimeout(generateCaptcha, 1200);
+      });
+  } else {
+    // Fallback if SDK not loaded (dev/test)
+    grantCaptchaReward(reward);
+  }
+}
+
+function grantCaptchaReward(reward){
+  S.captchaStreak++;
+  S.coins+=reward; S.captchaEarned+=reward; S.captchaCount++; S.totalEarned=(S.totalEarned||0)+reward;
+  S.captchaDate=todayStr(); S.lastCaptchaTime=Date.now();
+  addHistory('captcha',reward,'🧩 Captcha Solved');
+  confetti();
+  showToast('<svg width="16" height="16" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;display:inline-block;margin-right:3px"><defs><linearGradient id="rT" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FFD234"/><stop offset="45%" stop-color="#FF9000"/><stop offset="100%" stop-color="#B84400"/></linearGradient><radialGradient id="fT" cx="33%" cy="28%" r="72%"><stop offset="0%" stop-color="#FFF5B0"/><stop offset="40%" stop-color="#FFBE38"/><stop offset="100%" stop-color="#C85200"/></radialGradient></defs><circle cx="20" cy="22.5" r="18" fill="#6B2000" opacity="0.65"/><circle cx="20" cy="20" r="18" fill="url(#rT)"/><circle cx="20" cy="20" r="15" fill="url(#fT)"/><ellipse cx="14" cy="12.5" rx="6.5" ry="3.5" fill="rgba(255,255,255,0.30)" transform="rotate(-32 14 12.5)"/><text x="20" y="25.5" text-anchor="middle" font-family="Space Grotesk,sans-serif" font-weight="800" font-size="14" fill="rgba(80,18,0,0.92)" letter-spacing="1">CR</text></svg>+'+fmtCoins(reward)+' Coins Earned!','success');
+  saveState(); updateUI();
+  startCaptchaCooldown();
+}
+
+// ══ CAPTCHA COOLDOWN (3 min) ══
+let captchaCdT = null;
+function captchaCooldownLeft(){
+  if(!S.lastCaptchaTime) return 0;
+  const elapsed = Math.floor((Date.now() - S.lastCaptchaTime) / 1000);
+  return Math.max(0, CFG.CAPTCHA_COOLDOWN - elapsed);
+}
+
+function startCaptchaCooldown(){
+  const left = captchaCooldownLeft();
+  if(left <= 0){ setTimeout(generateCaptcha, 400); return; }
+
+  // Show cooldown UI inside captcha container
+  const container = document.getElementById('captchaContainer');
+  if(!container) return;
+  container.innerHTML = `
+    <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:18px;
+      padding:28px 20px;text-align:center;box-shadow:0 4px 20px rgba(30,127,255,0.08);margin-bottom:13px;">
+      <div style="font-size:32px;margin-bottom:10px">⏳</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px;">Next Captcha In</div>
+      <div id="captchaCdDisplay" style="font-family:'Space Grotesk',sans-serif;font-size:36px;font-weight:800;
+        background:linear-gradient(120deg,var(--blue),var(--purple));
+        -webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;">3:00</div>
+      <div style="background:var(--border);border-radius:5px;height:6px;overflow:hidden;margin:0 auto;max-width:200px;">
+        <div id="captchaCdBar" style="height:100%;border-radius:5px;
+          background:linear-gradient(90deg,var(--blue),var(--purple));
+          width:100%;transition:width 1s linear;"></div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-top:10px;font-weight:600;">3 min cooldown between captchas</div>
+    </div>`;
+
+  if(captchaCdT) clearInterval(captchaCdT);
+  captchaCdT = setInterval(()=>{
+    const rem = captchaCooldownLeft();
+    const disp = document.getElementById('captchaCdDisplay');
+    const bar  = document.getElementById('captchaCdBar');
+    if(!disp){ clearInterval(captchaCdT); captchaCdT=null; return; }
+    const m = Math.floor(rem/60);
+    const s = rem % 60;
+    disp.textContent = m+':'+(s<10?'0':'')+s;
+    if(bar) bar.style.width = (rem/CFG.CAPTCHA_COOLDOWN*100)+'%';
+    if(rem <= 0){
+      clearInterval(captchaCdT); captchaCdT=null;
+      setTimeout(generateCaptcha, 300);
+    }
+  }, 1000);
+}
+function captchaLose(){
+  S.captchaStreak=0;
+  showToast('❌ Wrong! Streak reset. Try again.','error');
+  saveState(); updateUI();
+  setTimeout(generateCaptcha,1100);
+}
+
+// ══ WATCH ADS ══
+function getAdsWatchedToday(){
+  if(S.watchAdsDate !== todayStr()){ S.watchAdsCount=0; S.watchAdsEarned=0; S.watchAdsDate=todayStr(); }
+  return S.watchAdsCount;
+}
+function updateAdsUI(){
+  const watched = getAdsWatchedToday();
+  const remaining = CFG.ADS_PER_DAY - watched;
+  const btn = document.getElementById('watchAdsBtn');
+  const badge = document.getElementById('adsWatchedBadge');
+  const earnBadge = document.getElementById('adsEarnedBadge');
+  if(badge) badge.textContent = watched;
+  if(earnBadge) earnBadge.textContent = S.watchAdsEarned||0;
+  if(btn){
+    if(remaining <= 0){
+      btn.disabled = true;
+      btn.innerHTML = '✅ All Ads Watched Today (2/2)';
+      btn.style.background = '#E2D9FF';
+      btn.style.color = 'var(--muted)';
+      btn.style.boxShadow = 'none';
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5,3 19,12 5,21"/></svg> WATCH AD & EARN 1 COIN ('+(remaining)+' left)';
+      btn.style.background = 'linear-gradient(135deg,#FF6B35,#FF9A00)';
+      btn.style.color = '#fff';
+      btn.style.boxShadow = '0 4px 18px rgba(255,107,53,0.35)';
+    }
+  }
+}
+function watchAd(){
+  const watched = getAdsWatchedToday();
+  if(watched >= CFG.ADS_PER_DAY){
+    showToast('✅ Already watched 2 ads today. Come back tomorrow!','info');
+    return;
+  }
+  const btn = document.getElementById('watchAdsBtn');
+  if(btn){ btn.disabled=true; btn.innerHTML='⏳ Loading Ad...'; }
+
+  // Ensure Monetag SDK loaded, then show ad
+  loadMonetag().then(() => {
+    if(typeof show_11196258 !== 'function'){
+      showToast('⚠️ Ad network unavailable. Try again!','error');
+      updateAdsUI(); return;
+    }
+    show_11196258('pop').then(() => {
+      S.watchAdsCount = (getAdsWatchedToday()) + 1;
+      S.watchAdsEarned = (S.watchAdsEarned||0) + CFG.ADS_REWARD;
+      S.watchAdsDate = todayStr();
+      S.coins += CFG.ADS_REWARD;
+      S.totalEarned = (S.totalEarned||0) + CFG.ADS_REWARD;
+      addHistory('ads', CFG.ADS_REWARD, '🎬 Watch Ad Reward');
+      saveState(); updateUI(); updateAdsUI();
+      showToast('🎉 +'+CFG.ADS_REWARD+' Coin! Ad reward earned!','success');
+      confetti();
+    }).catch(e => {
+      showToast('⚠️ Ad not completed. Try again!','error');
+      updateAdsUI();
+    });
+  });
+}
+
+function renderStreakBar(){
+  const max=5;
+  let html='';
+  for(let i=1;i<=max;i++){
+    const active=S.captchaStreak>=i;
+    const fire=S.captchaStreak>=5&&i===5;
+    html+=`<div class="streak-dot${active?(fire?' fire':' active'):''}">${fire?'🔥':i}</div>`;
+  }
+  document.getElementById('streakBar').innerHTML=html;
+}
+
+// ══ HISTORY ══
+function addHistory(type, amount, label){
+  S.history.unshift({type,amount,label,time:new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})});
+  if(S.history.length>60) S.history.length=60;
+}
+function renderHistory(){
+  const list=document.getElementById('historyList');
+  if(!S.history.length){
+    list.innerHTML='<div style="text-align:center;padding:36px 20px;color:#3B2A6E"><div style="font-size:36px;margin-bottom:10px">📊</div><div style="font-weight:600;">No activity yet.<br>Start with Scratch or Captcha!</div></div>';
+    return;
+  }
+  list.innerHTML=S.history.map(h=>`
+    <div class="history-item">
+      <div class="history-left">
+        <div class="h-icon" style="background:${h.type==='scratch'?'var(--purple-bg)':h.type==='captcha'?'var(--blue-bg)':h.type==='ads'?'rgba(255,107,53,0.10)':h.type==='task'?'var(--green-bg)':'rgba(255,71,87,0.08)'}">
+          ${h.type==='scratch'
+            ?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke:#7C3AED;filter:drop-shadow(0 0 4px rgba(124,58,237,0.75))"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20"/><path d="M7 15h2"/><path d="M12 15h5"/></svg>'
+            :h.type==='captcha'
+            ?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke:#1E7FFF;filter:drop-shadow(0 0 4px rgba(30,127,255,0.75))"><circle cx="12" cy="8" r="4"/><rect x="3" y="15" width="18" height="6" rx="2"/><path d="M7 18h2"/><path d="M12 18h5"/></svg>'
+            :h.type==='ads'
+            ?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke:#FF6B35;filter:drop-shadow(0 0 4px rgba(255,107,53,0.75))"><polygon points="5,3 19,12 5,21"/></svg>'
+            :h.type==='task'
+            ?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke:#00C873;filter:drop-shadow(0 0 4px rgba(0,200,115,0.75))"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12l2 2 4-4"/></svg>'
+            :'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke:#FF4757;filter:drop-shadow(0 0 4px rgba(255,71,87,0.75))"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>'
+          }
+        </div>
+        <div>
+          <div class="h-type">${h.label}</div>
+          <div class="h-time">${h.time}</div>
+        </div>
+      </div>
+      <div class="h-amount" style="color:${h.amount<0?'var(--red)':'var(--coin)'}">
+        ${h.amount<0?'-':'+'}${fmtCoins(Math.abs(h.amount))} Coins
+      </div>
+    </div>`).join('');
+}
+
+// ══ WITHDRAW ══
+function updateWdCalc(){
+  const coins=parseInt(document.getElementById('wdCoins').value)||0;
+  { const _el=document.getElementById('wdUsdtCalc'); if(_el) _el.textContent=coinsToUsdt(coins)+' USDT'; }
+}
+function setMaxWd(){
+  document.getElementById('wdCoins').value=Math.floor(S.coins);
+  updateWdCalc();
+}
+function openModal(id){ document.getElementById(id).classList.add('show'); }
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+
+async function processWithdraw(){
+  const addr=document.getElementById('wdAddress').value.trim();
+  const coins=parseInt(document.getElementById('wdCoins').value)||0;
+  if(!addr){showToast('❌ Enter your FaucetPay email!','error');return;}
+  if(coins<CFG.MIN_WITHDRAW_COINS){showToast('❌ Minimum '+CFG.MIN_WITHDRAW_COINS+' coins required!','error');return;}
+  if(coins>S.coins){showToast('❌ Not enough coins!','error');return;}
+  const remaining=getRemainingWithdraw();
+  if(coins>remaining){
+    const lv=getLevel();
+    showToast('❌ Daily limit: '+lv.dailyWithdraw+' coins. '+remaining+' left today!','error');
+    return;
+  }
+  const usdt=coinsToUsdt(coins);
+  // Populate confirm modal
+  document.getElementById('confirmCoins').textContent = fmtCoins(coins)+' Coins';
+  document.getElementById('confirmUsdt').textContent = usdt+' USDT';
+  document.getElementById('confirmEmail').textContent = addr;
+  openModal('confirmModal');
+}
+
+async function doWithdraw(){
+  const addr=document.getElementById('wdAddress').value.trim();
+  const coins=parseInt(document.getElementById('wdCoins').value)||0;
+  const usdt=parseFloat(coinsToUsdt(coins));
+  closeModal('confirmModal');
+  const btn=document.getElementById('confirmOkBtn');
+  if(btn){btn.disabled=true;btn.textContent='⏳ Sending...';}
+  try {
+    const res=await fetch(CFG.WITHDRAW_API_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ to: addr, coins: coins })
+    });
+    const d=await res.json();
+    if(d.status===200){
+      S.coins-=coins; S.withdrawnToday=(getWithdrawnToday())+coins; S.withdrawnDate=todayStr();
+      S.withdrawHistory = S.withdrawHistory||[];
+      S.withdrawHistory.unshift({
+        coins, usdt, addr,
+        time: new Date().toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})
+      });
+      if(S.withdrawHistory.length>10) S.withdrawHistory.length=10;
+      addHistory('withdraw',-coins,'💳 Withdrawal → '+usdt+' USDT');
+      saveState();updateUI();renderWithdrawHistory();confetti();
+      // Show success modal
+      document.getElementById('successUsdt').textContent = usdt+' USDT';
+      document.getElementById('successEmail').textContent = addr;
+      document.getElementById('wdCoins').value='';
+      document.getElementById('wdUsdtCalc').textContent='0.000000 USDT';
+      openModal('successModal');
+    } else {
+      showToast('❌ '+(d.message||'Transaction failed!'),'error');
+    }
+  } catch(e){
+    showToast('❌ Network error. Could not reach payment server.','error');
+  } finally {
+    if(btn){btn.disabled=false;btn.textContent='✔ Confirm & Send';}
+  }
+}
+
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+
+// ══ RECENT WITHDRAWALS ══
+function renderWithdrawHistory(){
+  const list = document.getElementById('recentWdList');
+  if(!list) return;
+  const wh = S.withdrawHistory||[];
+  if(!wh.length){
+    list.innerHTML = `<div style="text-align:center;padding:18px 12px;color:var(--muted);font-size:12px;font-weight:700;">
+      <div style="font-size:28px;margin-bottom:6px">💸</div>No withdrawals yet</div>`;
+    return;
+  }
+  list.innerHTML = wh.map((w,i)=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;
+      padding:11px 13px;${i<wh.length-1?'border-bottom:1px solid var(--border);':''}">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:36px;height:36px;border-radius:10px;background:var(--green-bg);
+          display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="18" height="18" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="500" height="500" rx="80" fill="white"/>
+            <rect x="15" y="15" width="470" height="470" rx="70" fill="none" stroke="#0066FF" stroke-width="30"/>
+            <text x="250" y="340" text-anchor="middle" font-family="Arial Black,sans-serif" font-weight="900" font-size="240" fill="#0066FF">FP</text>
+          </svg>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--text);">FaucetPay · ${w.addr.length>18?w.addr.slice(0,15)+'…':w.addr}</div>
+          <div style="font-size:10px;color:var(--muted);font-weight:600;margin-top:2px;">🕐 ${w.time}</div>
+        </div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:800;color:var(--green);">+${w.usdt} USDT</div>
+        <div style="font-size:10px;color:var(--muted);font-weight:600;">${fmtCoins(w.coins)} Coins</div>
+      </div>
+    </div>`).join('');
+}
+
+// ══ LOADING SCREEN ══
+(function(){
+  const tips = [
+    '🪙 10,000 Coins = $1 USDT',
+    '🎁 5 Free Scratch Cards Daily!',
+    '🧩 Solve Captchas to Earn Coins',
+    '💸 Withdraw via FaucetPay & more'
+  ];
+  let pct = 0;
+  let tipIdx = 0;
+  const bar = document.getElementById('lsBar');
+  const tipEl = document.getElementById('lsTip');
+  if(tipEl) tipEl.textContent = tips[0];
+
+  const iv = setInterval(()=>{
+    pct += Math.random() * 18 + 8;
+    if(pct >= 100) pct = 100;
+    if(bar) bar.style.width = pct + '%';
+    tipIdx = (tipIdx + 1) % tips.length;
+    if(tipEl) tipEl.textContent = tips[tipIdx];
+    if(pct >= 100) clearInterval(iv);
+  }, 220);
+
+  function hideLoader(){
+    const ls = document.getElementById('loadingScreen');
+    if(ls) ls.classList.add('hide');
+    setTimeout(()=>{ if(ls) ls.remove(); }, 550);
+  }
+
+  window.addEventListener('load', ()=>{
+    setTimeout(hideLoader, 1400);
+  });
+  // Fallback: max 3s
+  setTimeout(hideLoader, 3000);
+})();
+
+// ══ EARN SLIDER ══
+let earnSlideIdx = 0;
+const EARN_SLIDES_COUNT = 3;
+function showEarnSlide(i){
+  earnSlideIdx = ((i % EARN_SLIDES_COUNT) + EARN_SLIDES_COUNT) % EARN_SLIDES_COUNT;
+  const track = document.getElementById('earnSliderTrack');
+  if(track) track.style.transform = 'translateX(-' + (earnSlideIdx*100) + '%)';
+  document.querySelectorAll('.earn-dot').forEach((d,idx)=>d.classList.toggle('active', idx===earnSlideIdx));
+}
+function nextEarnSlide(){ showEarnSlide(earnSlideIdx+1); }
+setInterval(nextEarnSlide, 8000);
+
+// ══ BOOT ══
+updateUI();
+window.addEventListener('load',()=>{
+  setTimeout(initScratch, 80);
+  setTimeout(generateCaptcha, 120);
+  setTimeout(updateLevelUI, 150);
+  setTimeout(updateUI, 100);
+  setTimeout(updateAdsUI, 160);
+  setTimeout(renderWithdrawHistory, 170);
+});
+</script>
+</body>
+</html>
