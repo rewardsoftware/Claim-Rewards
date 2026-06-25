@@ -5,25 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>EarnZone - Scratch & Earn</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<!-- Monetag Rewarded Popup -->
-<script>
-  // Load Monetag SDK dynamically after page load to avoid Telegram blocking
-  function loadMonetag() {
-    return new Promise((resolve) => {
-      if (typeof show_11196258 === 'function') { resolve(); return; }
-      const s = document.createElement('script');
-      s.src = '//libtl.com/sdk.js';
-      s.setAttribute('data-zone', '11196258');
-      s.setAttribute('data-sdk', 'show_11196258');
-      s.onload = () => { setTimeout(resolve, 800); };
-      s.onerror = () => resolve();
-      document.head.appendChild(s);
-    });
-  }
-  // Preload on page ready
-  window.addEventListener('load', () => setTimeout(loadMonetag, 1500));
-</script>
-
+<script src='//libtl.com/sdk.js' data-zone='11196258' data-sdk='show_11196258'></script>
 <!-- AdsGram Interstitial -->
 <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
